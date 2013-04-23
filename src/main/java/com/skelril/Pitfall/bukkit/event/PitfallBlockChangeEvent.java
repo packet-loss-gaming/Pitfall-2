@@ -31,4 +31,8 @@ public class PitfallBlockChangeEvent extends BlockEvent implements Cancellable {
 
         return handlers;
     }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }

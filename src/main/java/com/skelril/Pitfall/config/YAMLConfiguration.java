@@ -32,7 +32,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Black List
         useBlackList = config.getBoolean("blacklist.enable", true);
-        ignorePassable = config.getBoolean("blacklist.ignore-possible", true);
+        ignorePassable = config.getBoolean("blacklist.ignore-passible", true);
         blackListedBlocks = config.getIntList("blacklist.blacklisted-blocks", Arrays.asList(
                 BlockID.CHEST, BlockID.TRAPPED_CHEST
         ));

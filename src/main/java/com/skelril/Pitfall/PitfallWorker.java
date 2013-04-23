@@ -76,7 +76,9 @@ public abstract class PitfallWorker implements Runnable {
             }
 
             if (boundSession.getBlock(pt).equals(targetBlock)) {
-                if (blackListedBlocks.contains(boundSession.getBlock(pt.add(0, 1, 0)))) continue;
+                BaseBlock above = boundSession.getBlock(pt.add(0, 1, 0));
+                above.setData(0);
+                if (blackListedBlocks.contains(above)) continue;
                 affected+=triggerVert(boundSession, pt);
             } else {
                 continue;
@@ -111,7 +113,9 @@ public abstract class PitfallWorker implements Runnable {
                 continue;
             }
 
-            if (!blackListedBlocks.contains(boundSession.getBlock(pt)) || cy == originY) {
+            BaseBlock above = boundSession.getBlock(pt);
+            above.setData(0);
+            if (!blackListedBlocks.contains(above) || cy == originY) {
                 if (boundSession.setBlock(pt, new BaseBlock(BlockID.AIR))) affected++;
             } else {
                 continue;

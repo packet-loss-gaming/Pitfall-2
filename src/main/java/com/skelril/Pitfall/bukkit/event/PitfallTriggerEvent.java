@@ -68,4 +68,8 @@ public class PitfallTriggerEvent extends EntityEvent implements Cancellable {
 
         return handlers;
     }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }
