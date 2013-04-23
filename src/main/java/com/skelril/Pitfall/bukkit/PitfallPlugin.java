@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -55,15 +56,25 @@ public class PitfallPlugin extends JavaPlugin {
 
         // Blacklist setup
         if (config.useBlackList) {
+
+            Set<BaseBlock> exceptions = new HashSet<BaseBlock>();
             Set<BaseBlock> blackList = pitfallBukkitWorker.getBlackList();
+
             for (int typeId : config.blackListedBlocks) {
+                if (typeId < 0) {
+                    exceptions.add(new BaseBlock(typeId * -1));
+                    continue;
+                }
                 blackList.add(new BaseBlock(typeId));
             }
+
             if (config.ignorePassable) {
                 for (Material material : Material.values()) {
-                    if (!material.isSolid()) blackList.add(new BaseBlock(material.getId()));
+                    if (BlockType.canPassThrough(material.getId())) blackList.add(new BaseBlock(material.getId()));
                 }
             }
+
+            blackList.removeAll(exceptions);
         }
 
         // Start the watcher
