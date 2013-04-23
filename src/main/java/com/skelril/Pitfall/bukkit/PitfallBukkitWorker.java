@@ -6,16 +6,17 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.skelril.Pitfall.PitfallWorker;
-import com.skelril.Pitfall.bukkit.PitfallPlugin;
 import com.skelril.Pitfall.bukkit.event.PitfallTriggerEvent;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Logger;
 
 public class PitfallBukkitWorker extends PitfallWorker {
@@ -25,6 +26,7 @@ public class PitfallBukkitWorker extends PitfallWorker {
     private static final Logger log = plugin.getLogger();
 
 
+    private CopyOnWriteArraySet<EditSession> editors = new CopyOnWriteArraySet<EditSession>();
     private Set<Class> targeted = new HashSet<Class>();
     private int defaultTrapDelay = 2;
     private int defaultReturnDelay = 60;
@@ -33,6 +35,16 @@ public class PitfallBukkitWorker extends PitfallWorker {
 
         targeted.add(Player.class);
         blackListedBlocks.add(new BaseBlock(BlockID.AIR));
+    }
+
+    @Override
+    public void revertAll() {
+
+        for (EditSession editor : editors) {
+
+            editor.undo(editor);
+        }
+        editors.clear();
     }
 
     @Override
@@ -62,10 +74,13 @@ public class PitfallBukkitWorker extends PitfallWorker {
                         public void run() {
                             try {
                                 final EditSession editor = edit(new BukkitWorld(world), BukkitUtil.toVector(b.getLocation()));
+                                editors.add(editor);
                                 server.getScheduler().runTaskLater(plugin, new Runnable() {
                                     @Override
                                     public void run() {
+                                        if (!editors.contains(editor)) return;
                                         editor.undo(editor);
+                                        editors.remove(editor);
                                     }
                                 }, finalEvent.getReturnDelay());
                             } catch (MaxChangedBlocksException ignored) {

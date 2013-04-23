@@ -19,6 +19,8 @@ public abstract class PitfallWorker implements Runnable {
     protected BaseBlock targetBlock = new BaseBlock(BlockID.CLAY);
     protected Set<BaseBlock> blackListedBlocks = new HashSet<BaseBlock>();
 
+    public abstract void revertAll();
+
     public void setMaxRadius(int radius) {
 
         this.maxRadius = radius;

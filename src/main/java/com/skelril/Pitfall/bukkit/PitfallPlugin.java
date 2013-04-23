@@ -73,6 +73,7 @@ public class PitfallPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
 
+        pitfallBukkitWorker.revertAll();
         getLogger().info(getDescription().getName() + " disabled.");
     }
 
