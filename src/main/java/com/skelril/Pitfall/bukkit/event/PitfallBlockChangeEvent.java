@@ -1,17 +1,54 @@
 package com.skelril.Pitfall.bukkit.event;
 
-import org.bukkit.block.Block;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BaseBlock;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.block.BlockEvent;
 
-public class PitfallBlockChangeEvent extends BlockEvent implements Cancellable {
+public class PitfallBlockChangeEvent extends Event implements com.skelril.Pitfall.PitfallBlockChangeEvent, Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled = false;
+    private final BlockWorldVector location;
+    private final BaseBlock from;
+    private BaseBlock to;
 
-    public PitfallBlockChangeEvent(Block block) {
-        super(block);
+    public PitfallBlockChangeEvent(BlockWorldVector location, BaseBlock from, BaseBlock to) {
+
+        this.location = location;
+        this.from = from;
+        this.to = to;
+    }
+
+    @Override
+    public BlockWorldVector getLocation() {
+
+        return location;
+    }
+
+    @Override
+    public BaseBlock getFrom() {
+
+        return from;
+    }
+
+    @Override
+    public BaseBlock getTo() {
+
+        return to;
+    }
+
+    @Override
+    public void setTo(BaseBlock to) {
+
+        this.to = to;
+    }
+
+    @Override
+    public boolean wasCancelled() {
+
+        return cancelled;
     }
 
     @Override

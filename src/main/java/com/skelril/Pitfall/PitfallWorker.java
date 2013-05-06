@@ -1,10 +1,6 @@
 package com.skelril.Pitfall;
 
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -116,7 +112,9 @@ public abstract class PitfallWorker implements Runnable {
             BaseBlock above = boundSession.getBlock(pt);
             above.setData(0);
             if (!blackListedBlocks.contains(above) || cy == originY) {
-                if (boundSession.setBlock(pt, new BaseBlock(BlockID.AIR))) affected++;
+                BlockWorldVector target = new BlockWorldVector(boundSession.getWorld(), pt);
+                PitfallBlockChangeEvent event = callEdit(target, above, new BaseBlock(BlockID.AIR));
+                if (!event.wasCancelled() && boundSession.setBlock(pt, event.getTo())) affected++;
             } else {
                 continue;
             }
@@ -126,4 +124,6 @@ public abstract class PitfallWorker implements Runnable {
 
         return affected;
     }
+
+    public abstract PitfallBlockChangeEvent callEdit(BlockWorldVector location, BaseBlock from, BaseBlock to);
 }

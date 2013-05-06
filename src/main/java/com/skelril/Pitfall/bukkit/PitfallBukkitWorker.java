@@ -1,10 +1,12 @@
 package com.skelril.Pitfall.bukkit;
+import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.skelril.Pitfall.PitfallBlockChangeEvent;
 import com.skelril.Pitfall.PitfallWorker;
 import com.skelril.Pitfall.bukkit.event.PitfallTriggerEvent;
 import org.bukkit.Server;
@@ -12,6 +14,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
+import org.bukkit.event.Event;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashSet;
@@ -45,6 +48,15 @@ public class PitfallBukkitWorker extends PitfallWorker {
             editor.undo(editor);
         }
         editors.clear();
+    }
+
+    @Override
+    public PitfallBlockChangeEvent callEdit(BlockWorldVector location, BaseBlock from, BaseBlock to) {
+
+        com.skelril.Pitfall.bukkit.event.PitfallBlockChangeEvent event =
+                new com.skelril.Pitfall.bukkit.event.PitfallBlockChangeEvent(location, from, to);
+        server.getPluginManager().callEvent(event);
+        return event;
     }
 
     @Override
