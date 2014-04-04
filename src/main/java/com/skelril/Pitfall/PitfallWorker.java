@@ -3,6 +3,8 @@ package com.skelril.Pitfall;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.internal.InternalEditSessionFactory;
+import com.sk89q.worldedit.util.eventbus.EventBus;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +12,7 @@ import java.util.Stack;
 
 public abstract class PitfallWorker implements Runnable {
 
+	private InternalEditSessionFactory factory = new InternalEditSessionFactory(new EventBus());
     protected int maxRadius = 3;
     protected int destructiveHeight = 1;
     protected BaseBlock targetBlock = new BaseBlock(BlockID.CLAY);
@@ -39,7 +42,7 @@ public abstract class PitfallWorker implements Runnable {
 
     public EditSession edit(LocalWorld world, Vector origin) throws MaxChangedBlocksException {
 
-        EditSession editor = new EditSession(world, -1);
+        EditSession editor = factory.getEditSession(world, -1);
         trigger(editor, origin);
         return editor;
     }
