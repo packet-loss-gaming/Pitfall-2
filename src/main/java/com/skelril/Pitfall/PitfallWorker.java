@@ -3,6 +3,7 @@ package com.skelril.Pitfall;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.internal.LocalWorldAdapter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -112,7 +113,7 @@ public abstract class PitfallWorker implements Runnable {
             BaseBlock above = boundSession.getBlock(pt);
             above.setData(0);
             if (!blackListedBlocks.contains(above) || cy == originY) {
-                BlockWorldVector target = new BlockWorldVector(boundSession.getWorld(), pt);
+                BlockWorldVector target = new BlockWorldVector(LocalWorldAdapter.wrap(boundSession.getWorld()), pt);
                 PitfallBlockChangeEvent event = callEdit(target, above, new BaseBlock(BlockID.AIR));
                 if (!event.wasCancelled() && boundSession.setBlock(pt, event.getTo())) affected++;
             } else {
