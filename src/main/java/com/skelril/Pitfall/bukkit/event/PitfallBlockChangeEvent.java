@@ -6,7 +6,6 @@ import com.skelril.Pitfall.Point;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -17,7 +16,7 @@ public class PitfallBlockChangeEvent extends Event implements Cancellable,
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled = false;
     private Location target;
-    private DataPair<Material, Byte> newType;
+    private DataPair<Material, Byte> newType = new DataPair<Material, Byte>(Material.AIR, (byte) 0);
 
     public PitfallBlockChangeEvent(Location target) {
         this.target = target;
@@ -68,6 +67,6 @@ public class PitfallBlockChangeEvent extends Event implements Cancellable,
 
     @Override
     public boolean isAllowed() {
-        return cancelled;
+        return !cancelled;
     }
 }
