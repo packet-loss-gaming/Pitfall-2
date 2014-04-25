@@ -56,4 +56,13 @@ public class Point implements Cloneable {
     public boolean equals(Object o) {
         return o instanceof Point && x == ((Point) o).getX() && y == ((Point) o).getY() && z == ((Point) o).getZ();
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash *= 31 + x;
+        hash *= 31 + y;
+        hash *= 31 + z;
+        return hash;
+    }
 }

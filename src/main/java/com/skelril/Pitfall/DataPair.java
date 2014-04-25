@@ -22,4 +22,12 @@ public class DataPair<Type, Data> {
     public boolean equals(Object o) {
         return o instanceof DataPair && type.equals(((DataPair) o).getType()) && data.equals(((DataPair) o).getData());
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash *= 31 + getType().hashCode();
+        hash *= 31 + getData().hashCode();
+        return hash;
+    }
 }
