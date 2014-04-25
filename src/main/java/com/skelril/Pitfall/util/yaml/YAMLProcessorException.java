@@ -17,28 +17,22 @@
  * License along with Pitfall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.skelril.Pitfall;
+package com.skelril.Pitfall.util.yaml;
 
-public abstract class PitfallEditor<World, Type extends DataPair<?, ?>> {
+/**
+ * YAMLProcessor exception.
+ *
+ * Original for WorldEdit, licensed under the
+ * GNU LESSER GENERAL PUBLIC LICENSE Version 3
+ */
+public class YAMLProcessorException extends Exception {
+    private static final long serialVersionUID = -2442886939908724203L;
 
-    private World world;
-
-    public PitfallEditor(World world) {
-        this.world = world;
+    public YAMLProcessorException() {
+        super();
     }
 
-    public abstract int getMinY();
-    public abstract int getMaxY();
-
-    public World getWorld() {
-        return world;
+    public YAMLProcessorException(String msg) {
+        super(msg);
     }
-
-    public void setWorld(World world) {
-        this.world = world;
-    }
-
-    public abstract boolean edit(Point pt, Type type);
-    public abstract Type getAt(Point pt);
-    public abstract void revertAll();
 }

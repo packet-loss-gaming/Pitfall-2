@@ -17,28 +17,25 @@
  * License along with Pitfall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.skelril.Pitfall;
+package com.skelril.Pitfall.util.yaml;
 
-public abstract class PitfallEditor<World, Type extends DataPair<?, ?>> {
+import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 
-    private World world;
+/**
+ * Original for WorldEdit, licensed under the
+ * GNU LESSER GENERAL PUBLIC LICENSE Version 3
+ */
+public enum YAMLFormat {
+    EXTENDED(FlowStyle.BLOCK),
+    COMPACT(FlowStyle.AUTO);
 
-    public PitfallEditor(World world) {
-        this.world = world;
+    private final FlowStyle style;
+
+    YAMLFormat(FlowStyle style) {
+        this.style = style;
     }
 
-    public abstract int getMinY();
-    public abstract int getMaxY();
-
-    public World getWorld() {
-        return world;
+    public FlowStyle getStyle() {
+        return style;
     }
-
-    public void setWorld(World world) {
-        this.world = world;
-    }
-
-    public abstract boolean edit(Point pt, Type type);
-    public abstract Type getAt(Point pt);
-    public abstract void revertAll();
 }

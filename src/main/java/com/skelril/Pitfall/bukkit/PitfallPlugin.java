@@ -1,10 +1,28 @@
+/*
+ * Copyright (c) 2014 Wyatt Childers.
+ *
+ * This file is part of Pitfall.
+ *
+ * Pitfall is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Pitfall is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Pitfall.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.skelril.Pitfall.bukkit;
 
-import com.sk89q.util.yaml.YAMLFormat;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.blocks.BlockType;
 import com.skelril.Pitfall.DataPair;
 import com.skelril.Pitfall.LocalConfiguration;
+import com.skelril.Pitfall.util.yaml.YAMLFormat;
+import com.skelril.Pitfall.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -59,17 +77,20 @@ public class PitfallPlugin extends JavaPlugin {
             Set<DataPair<Material, Byte>> exceptions = new HashSet<DataPair<Material, Byte>>();
             Set<DataPair<Material, Byte>> blackList = pitfallBukkitWorker.getBlackList();
 
-            for (int typeId : config.blackListedBlocks) {
-                if (typeId < 0) {
-                    exceptions.add(new DataPair<Material, Byte>(Material.getMaterial(typeId * -1), (byte) -1));
+            for (String type : config.blackListedBlocks) {
+                String[] splits = type.split(":");
+                if (splits.length < 2) continue;
+                Byte data = Byte.valueOf(splits[1]);
+                if (splits[0].startsWith("-")) {
+                    exceptions.add(new DataPair<Material, Byte>(Material.getMaterial(splits[0].substring(1)), data));
                     continue;
                 }
-                blackList.add(new DataPair<Material, Byte>(Material.getMaterial(typeId), (byte) -1));
+                blackList.add(new DataPair<Material, Byte>(Material.getMaterial(splits[0]), (byte) -1));
             }
 
             if (config.ignorePassable) {
                 for (Material material : Material.values()) {
-                    if (BlockType.canPassThrough(material.getId())) blackList.add(new DataPair<Material, Byte>(material, (byte) -1));
+                    if (material.isBlock() && material.isSolid()) blackList.add(new DataPair<Material, Byte>(material, (byte) -1));
                 }
             }
 

@@ -1,15 +1,33 @@
+/*
+ * Copyright (c) 2014 Wyatt Childers.
+ *
+ * This file is part of Pitfall.
+ *
+ * Pitfall is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Pitfall is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Pitfall.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.skelril.Pitfall.bukkit;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import com.skelril.Pitfall.config.YAMLConfiguration;
+import com.skelril.Pitfall.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
-/**
- * A implementation of {@link com.sk89q.worldedit.bukkit.BukkitConfiguration} for Pitfall.
- */
 public class BukkitConfiguration extends YAMLConfiguration {
     private static final PitfallPlugin plugin = PitfallPlugin.inst();
 
@@ -21,6 +39,10 @@ public class BukkitConfiguration extends YAMLConfiguration {
     public Material targetType;
     public byte targetData;
 
+    // Black List
+    public List<String> blackListedBlocks;
+
+
     @Override
     public void load() {
         try {
@@ -29,11 +51,15 @@ public class BukkitConfiguration extends YAMLConfiguration {
             e.printStackTrace();
         }
 
+        super.load();
+
         // Target Block
         targetType = Material.valueOf(config.getString("target-block.name", Material.CLAY.toString()));
         targetData = (byte) config.getInt("target-block.data", 0);
 
-        super.load();
+        blackListedBlocks = config.getStringList("blacklist.blacklisted-blocks", Arrays.asList(
+                Material.CHEST + ":-1", Material.TRAPPED_CHEST + ":-1"
+        ));
     }
 
     @Override
