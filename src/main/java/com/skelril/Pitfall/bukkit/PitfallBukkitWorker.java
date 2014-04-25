@@ -60,7 +60,7 @@ public class PitfallBukkitWorker extends PitfallWorker<World, DataPair<Material,
                 DataPair<Material, Byte> hPair = new DataPair<Material, Byte>(h.getType(), h.getData());
                 DataPair<Material, Byte> bPair = new DataPair<Material, Byte>(b.getType(), b.getData());
 
-                if (targetBlock.equals(bPair) && !blackListedBlocks.contains(hPair)) {
+                if (targetBlock.equals(bPair) && !checkBlackList(hPair)) {
 
                     PitfallTriggerEvent event = new PitfallTriggerEvent(entity, b, defaultTrapDelay, defaultReturnDelay);
                     server.getPluginManager().callEvent(event);
@@ -106,6 +106,11 @@ public class PitfallBukkitWorker extends PitfallWorker<World, DataPair<Material,
         } else {
             targeted.remove(Creature.class);
         }
+    }
+
+    @Override
+    public boolean checkBlackList(DataPair<Material, Byte> type) {
+        return blackListedBlocks.contains(type) || blackListedBlocks.contains(type.clone().setData((byte) -1));
     }
 
     @Override

@@ -61,15 +61,15 @@ public class PitfallPlugin extends JavaPlugin {
 
             for (int typeId : config.blackListedBlocks) {
                 if (typeId < 0) {
-                    exceptions.add(new DataPair<Material, Byte>(Material.getMaterial(typeId * -1), (byte) 0));
+                    exceptions.add(new DataPair<Material, Byte>(Material.getMaterial(typeId * -1), (byte) -1));
                     continue;
                 }
-                blackList.add(new DataPair<Material, Byte>(Material.getMaterial(typeId), (byte) 0));
+                blackList.add(new DataPair<Material, Byte>(Material.getMaterial(typeId), (byte) -1));
             }
 
             if (config.ignorePassable) {
                 for (Material material : Material.values()) {
-                    if (BlockType.canPassThrough(material.getId())) blackList.add(new DataPair<Material, Byte>(material, (byte) 0));
+                    if (BlockType.canPassThrough(material.getId())) blackList.add(new DataPair<Material, Byte>(material, (byte) -1));
                 }
             }
 

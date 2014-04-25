@@ -28,6 +28,8 @@ public abstract class PitfallWorker<World, Type extends DataPair<?, ?>> implemen
         this.targetBlock = targetedBlock;
     }
 
+    public abstract boolean checkBlackList(Type type);
+
     public Set<Type> getBlackList() {
         return blackListedBlocks;
     }
@@ -59,7 +61,7 @@ public abstract class PitfallWorker<World, Type extends DataPair<?, ?>> implemen
 
             if (targetBlock.equals(editor.getAt(pt))) {
                 Type above = editor.getAt(pt.withY(pt.getY() + 1));
-                if (blackListedBlocks.contains(above)) continue;
+                if (checkBlackList(above)) continue;
                 affected += triggerVert(editor, pt);
             } else {
                 continue;
@@ -91,7 +93,7 @@ public abstract class PitfallWorker<World, Type extends DataPair<?, ?>> implemen
             }
 
             Type above = editor.getAt(pt);
-            if (!blackListedBlocks.contains(above) || cy == originY) {
+            if (!checkBlackList(above) || cy == originY) {
                 PitfallBlockChange<Type> event = callEvent(editor.getWorld(), pt);
                 if (event.isAllowed()) {
                     editor.edit(event.getTargetPoint(), event.getNewType());
