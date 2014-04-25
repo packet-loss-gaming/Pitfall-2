@@ -51,8 +51,6 @@ public class BukkitConfiguration extends YAMLConfiguration {
             e.printStackTrace();
         }
 
-        super.load();
-
         // Target Block
         targetType = Material.valueOf(config.getString("target-block.name", Material.CLAY.toString()));
         targetData = (byte) config.getInt("target-block.data", 0);
@@ -60,6 +58,8 @@ public class BukkitConfiguration extends YAMLConfiguration {
         blackListedBlocks = config.getStringList("blacklist.blacklisted-blocks", Arrays.asList(
                 Material.CHEST + ":-1", Material.TRAPPED_CHEST + ":-1", Material.SIGN_POST + ":-1"
         ));
+
+        super.load();
     }
 
     @Override
