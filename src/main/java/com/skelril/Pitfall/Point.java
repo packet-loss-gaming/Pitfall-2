@@ -51,4 +51,9 @@ public class Point implements Cloneable {
     public Point withZ(int z) {
         return new Point(x, y, z);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Point && x == ((Point) o).getX() && y == ((Point) o).getY() && z == ((Point) o).getZ();
+    }
 }
