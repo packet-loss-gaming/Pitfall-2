@@ -58,7 +58,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
         targetData = (byte) config.getInt("target-block.data", 0);
 
         blackListedBlocks = config.getStringList("blacklist.blacklisted-blocks", Arrays.asList(
-                Material.CHEST + ":-1", Material.TRAPPED_CHEST + ":-1"
+                Material.CHEST + ":-1", Material.TRAPPED_CHEST + ":-1", Material.SIGN_POST + ":-1"
         ));
     }
 

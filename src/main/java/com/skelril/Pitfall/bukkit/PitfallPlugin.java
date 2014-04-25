@@ -90,7 +90,7 @@ public class PitfallPlugin extends JavaPlugin {
 
             if (config.ignorePassable) {
                 for (Material material : Material.values()) {
-                    if (material.isBlock() && material.isSolid()) blackList.add(new DataPair<Material, Byte>(material, (byte) -1));
+                    if (material.isBlock() && !material.isSolid()) blackList.add(new DataPair<Material, Byte>(material, (byte) -1));
                 }
             }
 
