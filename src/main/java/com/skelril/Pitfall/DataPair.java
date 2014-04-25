@@ -1,6 +1,6 @@
 package com.skelril.Pitfall;
 
-public class DataPair<Type, Data> implements Cloneable {
+public class DataPair<Type, Data> {
 
     private Type type;
     private Data data;
@@ -14,22 +14,15 @@ public class DataPair<Type, Data> implements Cloneable {
         return type;
     }
 
-    public DataPair<Type, Data> setType(Type type) {
-        this.type = type;
-        return this;
+    public DataPair<Type, Data> withType(Type type) {
+        return new DataPair<Type, Data>(type, data);
     }
 
     public Data getData() {
         return data;
     }
 
-    public DataPair<Type, Data> setData(Data data) {
-        this.data = data;
-        return this;
-    }
-
-    @Override
-    public DataPair<Type, Data> clone() {
+    public DataPair<Type, Data> withData(Data data) {
         return new DataPair<Type, Data>(type, data);
     }
 

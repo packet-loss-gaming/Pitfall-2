@@ -110,7 +110,7 @@ public class PitfallBukkitWorker extends PitfallWorker<World, DataPair<Material,
 
     @Override
     public boolean checkBlackList(DataPair<Material, Byte> type) {
-        return blackListedBlocks.contains(type) || blackListedBlocks.contains(type.clone().setData((byte) -1));
+        return blackListedBlocks.contains(type) || blackListedBlocks.contains(type.withData((byte) -1));
     }
 
     @Override
