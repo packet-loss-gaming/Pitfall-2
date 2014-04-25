@@ -2,9 +2,8 @@ package com.skelril.Pitfall.bukkit;
 
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.blocks.BaseBlock;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
+import com.skelril.Pitfall.DataPair;
 import com.skelril.Pitfall.LocalConfiguration;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,14 +15,14 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
 /**
- * Pitfall Plugin for Bukkit originally written by razorstorm.
+ * Pitfall Plugin for Bukkit idea credited to razorstorm.
  *
  * @author Dark_Arc
  */
 public class PitfallPlugin extends JavaPlugin {
 
     private static PitfallPlugin inst;
-    private LocalConfiguration config;
+    private BukkitConfiguration config;
     private PitfallBukkitWorker pitfallBukkitWorker;
 
     @Override
@@ -52,25 +51,25 @@ public class PitfallPlugin extends JavaPlugin {
         pitfallBukkitWorker.activateCreatureCheck(config.enableMonsterTrap);
         pitfallBukkitWorker.setMaxRadius(config.maxRadius);
         pitfallBukkitWorker.setDestructiveHeight(config.destrutiveHeight);
-        pitfallBukkitWorker.setBaseBlock(new BaseBlock(config.pitItem, config.pitItemData));
+        pitfallBukkitWorker.setTargetBlock(new DataPair<Material, Byte>(config.targetType, config.targetData));
 
         // Blacklist setup
         if (config.useBlackList) {
 
-            Set<BaseBlock> exceptions = new HashSet<BaseBlock>();
-            Set<BaseBlock> blackList = pitfallBukkitWorker.getBlackList();
+            Set<DataPair<Material, Byte>> exceptions = new HashSet<DataPair<Material, Byte>>();
+            Set<DataPair<Material, Byte>> blackList = pitfallBukkitWorker.getBlackList();
 
             for (int typeId : config.blackListedBlocks) {
                 if (typeId < 0) {
-                    exceptions.add(new BaseBlock(typeId * -1));
+                    exceptions.add(new DataPair<Material, Byte>(Material.getMaterial(typeId * -1), (byte) 0));
                     continue;
                 }
-                blackList.add(new BaseBlock(typeId));
+                blackList.add(new DataPair<Material, Byte>(Material.getMaterial(typeId), (byte) 0));
             }
 
             if (config.ignorePassable) {
                 for (Material material : Material.values()) {
-                    if (BlockType.canPassThrough(material.getId())) blackList.add(new BaseBlock(material.getId()));
+                    if (BlockType.canPassThrough(material.getId())) blackList.add(new DataPair<Material, Byte>(material, (byte) 0));
                 }
             }
 

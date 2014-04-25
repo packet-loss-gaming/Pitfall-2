@@ -26,10 +26,6 @@ public class YAMLConfiguration extends LocalConfiguration {
     @Override
     public void load() {
 
-        // Target Block
-        pitItem = config.getInt("target-block.id", BlockID.CLAY);
-        pitItemData = config.getInt("target-block.data", 0);
-
         // Black List
         useBlackList = config.getBoolean("blacklist.enable", true);
         ignorePassable = config.getBoolean("blacklist.ignore-passible", true);

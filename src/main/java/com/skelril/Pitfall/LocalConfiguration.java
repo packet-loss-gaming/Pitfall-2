@@ -8,10 +8,6 @@ import java.util.List;
  */
 public abstract class LocalConfiguration {
 
-    // Target Block
-    public int pitItem;
-    public int pitItemData;
-
     // Black List
     public boolean useBlackList;
     public boolean ignorePassable;

@@ -1,67 +1,52 @@
 package com.skelril.Pitfall;
 
-import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.blocks.BaseBlock;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.internal.LocalWorldAdapter;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-public abstract class PitfallWorker implements Runnable {
+public abstract class PitfallWorker<World, Type extends DataPair<?, ?>> implements Runnable {
 
     protected int maxRadius = 3;
     protected int destructiveHeight = 1;
-    protected BaseBlock targetBlock = new BaseBlock(BlockID.CLAY);
-    protected Set<BaseBlock> blackListedBlocks = new HashSet<BaseBlock>();
+    protected Type targetBlock;
+    protected Set<Type> blackListedBlocks = new HashSet<Type>();
 
     public abstract void revertAll();
 
-    public void setMaxRadius(int radius) {
+    public abstract void activateItemCheck(boolean enable);
+    public abstract void activateCreatureCheck(boolean enable);
 
+    public void setMaxRadius(int radius) {
         this.maxRadius = radius;
     }
 
     public void setDestructiveHeight(int destructiveHeight) {
-
         this.destructiveHeight = destructiveHeight;
     }
 
-    public void setBaseBlock(BaseBlock targetedBlock) {
-
+    public void setTargetBlock(Type targetedBlock) {
         this.targetBlock = targetedBlock;
     }
 
-    public Set<BaseBlock> getBlackList() {
-
+    public Set<Type> getBlackList() {
         return blackListedBlocks;
     }
 
-    public EditSession edit(LocalWorld world, Vector origin) throws MaxChangedBlocksException {
-
-        EditSession editor = new EditSession(world, -1);
-        trigger(editor, origin);
-        return editor;
-    }
-
-    public int trigger(EditSession boundSession, Vector origin) throws MaxChangedBlocksException {
+    public int trigger(PitfallEditor<World, Type> editor, Point origin) {
 
         int affected = 0;
-        int originX = origin.getBlockX();
-        int originY = origin.getBlockY();
-        int originZ = origin.getBlockZ();
+        final int originX = origin.getX();
+        final int originZ = origin.getZ();
 
-        HashSet<BlockVector> visited = new HashSet<BlockVector>();
-        Stack<BlockVector> queue = new Stack<BlockVector>();
+        HashSet<Point> visited = new HashSet<Point>();
+        Stack<Point> queue = new Stack<Point>();
 
-        queue.push(new BlockVector(originX, originY, originZ));
+        queue.push(origin.clone());
 
         while (!queue.empty()) {
-            BlockVector pt = queue.pop();
-            int cx = pt.getBlockX();
-            int cy = pt.getBlockY();
-            int cz = pt.getBlockZ();
+            Point pt = queue.pop();
+            final int cx = pt.getX();
+            final int cz = pt.getZ();
 
             if (visited.contains(pt)) continue;
             visited.add(pt);
@@ -72,59 +57,55 @@ public abstract class PitfallWorker implements Runnable {
                 continue;
             }
 
-            if (boundSession.getBlock(pt).equals(targetBlock)) {
-                BaseBlock above = boundSession.getBlock(pt.add(0, 1, 0));
-                above.setData(0);
+            if (targetBlock.equals(editor.getAt(pt))) {
+                Type above = editor.getAt(pt.withY(pt.getY() + 1));
                 if (blackListedBlocks.contains(above)) continue;
-                affected+=triggerVert(boundSession, pt);
+                affected += triggerVert(editor, pt);
             } else {
                 continue;
             }
 
-            queue.push(new BlockVector(cx + 1, cy, cz));
-            queue.push(new BlockVector(cx - 1, cy, cz));
-            queue.push(new BlockVector(cx, cy, cz + 1));
-            queue.push(new BlockVector(cx, cy, cz - 1));
+            queue.push(pt.withX(cx + 1));
+            queue.push(pt.withX(cx - 1));
+            queue.push(pt.withZ(cz + 1));
+            queue.push(pt.withZ(cz - 1));
         }
 
         return affected;
     }
 
-    public int triggerVert(EditSession boundSession, BlockVector origin) throws MaxChangedBlocksException {
+    public int triggerVert(PitfallEditor<World, Type> editor, Point origin) {
 
         int affected = 0;
-        int originX = origin.getBlockX();
-        int originY = origin.getBlockY();
-        int originZ = origin.getBlockZ();
+        final int originY = origin.getY();
 
-        Stack<BlockVector> queue = new Stack<BlockVector>();
+        Stack<Point> queue = new Stack<Point>();
 
-        queue.push(new BlockVector(originX, originY, originZ));
+        queue.push(origin.clone());
         while (!queue.isEmpty()) {
-            BlockVector pt = queue.pop();
-            int cx = pt.getBlockX();
-            int cy = pt.getBlockY();
-            int cz = pt.getBlockZ();
+            Point pt = queue.pop();
+            final int cy = pt.getY();
 
-            if (cy < 0 || cy < originY || cy > originY + destructiveHeight || cy > boundSession.getWorld().getMaxY()) {
+            if (cy < editor.getMinY() || cy < originY || cy > originY + destructiveHeight || cy > editor.getMaxY()) {
                 continue;
             }
 
-            BaseBlock above = boundSession.getBlock(pt);
-            above.setData(0);
+            Type above = editor.getAt(pt);
             if (!blackListedBlocks.contains(above) || cy == originY) {
-                BlockWorldVector target = new BlockWorldVector(LocalWorldAdapter.wrap(boundSession.getWorld()), pt);
-                PitfallBlockChangeEvent event = callEdit(target, above, new BaseBlock(BlockID.AIR));
-                if (!event.wasCancelled() && boundSession.setBlock(pt, event.getTo())) affected++;
+                PitfallBlockChange<Type> event = callEvent(editor.getWorld(), pt);
+                if (event.isAllowed()) {
+                    editor.edit(event.getTargetPoint(), event.getNewType());
+                    affected++;
+                }
             } else {
                 continue;
             }
 
-            queue.push(new BlockVector(cx, cy + 1, cz));
+            queue.push(pt.withY(cy + 1));
         }
 
         return affected;
     }
 
-    public abstract PitfallBlockChangeEvent callEdit(BlockWorldVector location, BaseBlock from, BaseBlock to);
+    protected abstract PitfallBlockChange<Type> callEvent(World world, Point pt);
 }

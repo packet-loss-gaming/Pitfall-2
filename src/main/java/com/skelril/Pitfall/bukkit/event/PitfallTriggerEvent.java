@@ -23,49 +23,39 @@ public class PitfallTriggerEvent extends EntityEvent implements Cancellable {
     }
 
     public Block getBlock() {
-
         return block;
     }
 
     public int getTriggerDelay() {
-
         return triggerDelay;
     }
 
     public void setTriggerDelay(int triggerDelay) {
-
         Validate.isTrue(triggerDelay > 0, "Trigger delay cannot be less than 1 tick.");
-
         this.triggerDelay = triggerDelay;
     }
 
     public int getReturnDelay() {
-
         return returnDelay;
     }
 
     public void setReturnDelay(int returnDelay) {
-
         Validate.isTrue(returnDelay > 0, "Return delay cannot be less than 1 tick.");
-
         this.returnDelay = returnDelay;
     }
 
     @Override
     public boolean isCancelled() {
-
         return cancelled;
     }
 
     @Override
     public void setCancelled(boolean cancelled) {
-
         this.cancelled = cancelled;
     }
 
     @Override
     public HandlerList getHandlers() {
-
         return handlers;
     }
 
