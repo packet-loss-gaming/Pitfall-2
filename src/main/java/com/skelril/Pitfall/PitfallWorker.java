@@ -23,12 +23,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-public abstract class PitfallWorker<World, Type extends DataPair<?, ?>> implements Runnable {
+public abstract class PitfallWorker<World, Type> implements Runnable {
 
     protected int maxRadius = 3;
     protected int destructiveHeight = 1;
     protected Type targetBlock;
-    protected Set<Type> blackListedBlocks = new HashSet<Type>();
+    protected Set<Type> blackListedBlocks = new HashSet<>();
 
     public abstract void revertAll();
 

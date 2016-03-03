@@ -22,19 +22,12 @@ package com.skelril.Pitfall.config;
 import com.skelril.Pitfall.LocalConfiguration;
 import com.skelril.Pitfall.util.yaml.YAMLProcessor;
 
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-
 public class YAMLConfiguration extends LocalConfiguration {
 
     public final YAMLProcessor config;
-    protected final Logger logger;
-    private FileHandler logFileHandler;
 
-    public YAMLConfiguration(YAMLProcessor config, Logger logger) {
-
+    public YAMLConfiguration(YAMLProcessor config) {
         this.config = config;
-        this.logger = logger;
     }
 
     @Override
@@ -56,10 +49,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.save();
     }
 
-    public void unload() {
-
-        if (logFileHandler != null) {
-            logFileHandler.close();
-        }
+    public void init() {
+        config.writeDefaults();
     }
 }

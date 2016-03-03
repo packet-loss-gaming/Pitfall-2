@@ -19,7 +19,7 @@
 
 package com.skelril.Pitfall;
 
-public abstract class PitfallEditor<World, Type extends DataPair<?, ?>> {
+public abstract class PitfallEditor<World, Type> {
 
     private World world;
 
