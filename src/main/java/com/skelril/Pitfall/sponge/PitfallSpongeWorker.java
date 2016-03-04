@@ -52,7 +52,14 @@ public class PitfallSpongeWorker extends PitfallWorker<World, BlockType> {
                 // Perform some checks to see if we should precede
                 if (entity instanceof Player && !((Player) entity).hasPermission("pitfall.trigger")) continue;
 
-                Location<World> hLoc = entity.getLocation().add(0, -1, 0);
+                final PitfallSpongeEditor editor = new PitfallSpongeEditor(world);
+
+                Location<World> eLoc = entity.getLocation();
+                if (editor.getMaxY() < eLoc.getY() || editor.getMinY() > eLoc.getY() - 2) {
+                    continue;
+                }
+
+                Location<World> hLoc = eLoc.add(0, -1, 0);
                 Location<World> bLoc = hLoc.add(0, -1, 0);
 
                 final BlockType h = hLoc.getBlockType();
@@ -60,14 +67,13 @@ public class PitfallSpongeWorker extends PitfallWorker<World, BlockType> {
 
                 if (targetBlock.equals(b) && !checkBlackList(h)) {
                     Task.builder().execute(() -> {
-                        final PitfallSpongeEditor record = new PitfallSpongeEditor(world);
 
-                        trigger(record, new Point(bLoc.getBlockX(), bLoc.getBlockY(), bLoc.getBlockZ()));
-                        records.add(record);
+                        trigger(editor, new Point(bLoc.getBlockX(), bLoc.getBlockY(), bLoc.getBlockZ()));
+                        records.add(editor);
                         Task.builder().execute(() -> {
-                            if (!records.contains(record)) return;
-                            record.revertAll();
-                            records.remove(record);
+                            if (!records.contains(editor)) return;
+                            editor.revertAll();
+                            records.remove(editor);
                         }).delayTicks(defaultReturnDelay).submit(PitfallPlugin.inst());
                     }).delayTicks(defaultTrapDelay).submit(PitfallPlugin.inst());
                 }

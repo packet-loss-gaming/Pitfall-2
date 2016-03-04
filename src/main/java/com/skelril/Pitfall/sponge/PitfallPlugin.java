@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.config.ConfigManager;
+import org.spongepowered.api.data.property.block.PassableProperty;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
@@ -17,6 +18,7 @@ import org.spongepowered.api.scheduler.Task;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Set;
 
 @Plugin(id = "Pitfall", name = "Pitfall", version = "2.3")
@@ -84,7 +86,12 @@ public class PitfallPlugin {
             }
 
             if (config.ignorePassable) {
-                getLogger().warn("Ignoring passable blocks is currently not supported on the Sponge platform.");
+                for (BlockType blockType : Sponge.getRegistry().getAllOf(BlockType.class)) {
+                    Optional<PassableProperty> optProperty = blockType.getProperty(PassableProperty.class);
+                    if (optProperty.isPresent() && optProperty.get().getValue()) {
+                        blackList.add(blockType);
+                    }
+                }
             }
         }
 
@@ -104,6 +111,7 @@ public class PitfallPlugin {
         }
 
         try {
+            file.mkdirs();
             file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
