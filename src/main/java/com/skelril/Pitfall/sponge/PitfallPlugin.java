@@ -115,7 +115,7 @@ public class PitfallPlugin {
         }
 
         try {
-            file.mkdirs();
+            file.getParentFile().mkdirs();
             file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
