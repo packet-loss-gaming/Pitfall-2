@@ -31,7 +31,14 @@ public class PitfallSpongeEditor extends PitfallEditor<World, BlockType> {
     @Override
     public boolean edit(Point pt, BlockType blockType) {
         oldStates.add(getWorld().createSnapshot(pt.getX(), pt.getY(), pt.getZ()));
-        getWorld().setBlockType(pt.getX(), pt.getY(), pt.getZ(), blockType, true, Cause.of(PitfallPlugin.container()));
+        getWorld().setBlockType(
+                pt.getX(),
+                pt.getY(),
+                pt.getZ(),
+                blockType,
+                true,
+                Cause.source(PitfallPlugin.container()).build()
+        );
         return true;
     }
 
