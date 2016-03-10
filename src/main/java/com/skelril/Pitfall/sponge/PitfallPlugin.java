@@ -64,7 +64,11 @@ public class PitfallPlugin {
         config.load();
 
         // New version printing
-        getLogger().info(container.getName() + " " + container.getVersion() + " enabled.");
+        getLogger().info(
+                container.getName() + " "
+                        + (container.getVersion().isPresent() ? container.getVersion().get() + " " : "")
+                        + "enabled."
+        );
 
         // Setup the Engine
         pitfallSpongeWorker = new PitfallSpongeWorker();
