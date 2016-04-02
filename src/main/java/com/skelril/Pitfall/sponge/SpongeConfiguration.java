@@ -6,6 +6,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.config.ConfigManager;
+import org.spongepowered.api.entity.living.player.gamemode.GameMode;
+import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.item.ItemType;
 
 import java.io.File;
@@ -25,6 +27,8 @@ public class SpongeConfiguration extends YAMLConfiguration {
     // Black List
     public List<String> blackListedBlocks;
 
+    public List<String> ignoredGameModes;
+
     @Override
     public void load() {
         try {
@@ -38,6 +42,10 @@ public class SpongeConfiguration extends YAMLConfiguration {
 
         blackListedBlocks = config.getStringList("blacklist.blacklisted-blocks", Arrays.asList(
                 BlockTypes.CHEST.getId(), BlockTypes.TRAPPED_CHEST.getId(), BlockTypes.STANDING_SIGN.getId()
+        ));
+
+        ignoredGameModes = config.getStringList("ignored-gamemodes", Arrays.asList(
+                GameModes.SPECTATOR.getId()
         ));
 
         super.load();

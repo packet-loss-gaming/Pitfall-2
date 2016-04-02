@@ -9,6 +9,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.config.ConfigManager;
 import org.spongepowered.api.data.property.block.PassableProperty;
+import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
@@ -97,6 +98,12 @@ public class PitfallPlugin {
                     }
                 }
             }
+        }
+
+        Set<GameMode> ignoredGameModes = pitfallSpongeWorker.getIgnoredGameModes();
+
+        for (String mode : config.ignoredGameModes) {
+            ignoredGameModes.add(Sponge.getRegistry().getType(GameMode.class, mode).get());
         }
 
         // Start the watcher

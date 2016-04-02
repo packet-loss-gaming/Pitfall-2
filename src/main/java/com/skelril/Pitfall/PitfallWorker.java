@@ -23,12 +23,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-public abstract class PitfallWorker<World, Type> implements Runnable {
+public abstract class PitfallWorker<World, Type, GameMode> implements Runnable {
 
     protected int maxRadius = 3;
     protected int destructiveHeight = 1;
     protected Type targetBlock;
     protected Set<Type> blackListedBlocks = new HashSet<>();
+    protected Set<GameMode> ignoredGameModes = new HashSet<>();
 
     public abstract void revertAll();
 
@@ -51,6 +52,10 @@ public abstract class PitfallWorker<World, Type> implements Runnable {
 
     public Set<Type> getBlackList() {
         return blackListedBlocks;
+    }
+
+    public Set<GameMode> getIgnoredGameModes() {
+        return ignoredGameModes;
     }
 
     public int trigger(PitfallEditor<World, Type> editor, Point origin) {

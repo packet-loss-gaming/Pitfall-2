@@ -6,17 +6,19 @@ import com.skelril.Pitfall.Point;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.*;
 
-public class PitfallSpongeWorker extends PitfallWorker<World, BlockType> {
+public class PitfallSpongeWorker extends PitfallWorker<World, BlockType, GameMode> {
 
     private List<PitfallSpongeEditor> records = new ArrayList<>();
     private Set<Class> targeted = new HashSet<>();
@@ -51,6 +53,11 @@ public class PitfallSpongeWorker extends PitfallWorker<World, BlockType> {
 
                 // Perform some checks to see if we should precede
                 if (entity instanceof Player && !((Player) entity).hasPermission("pitfall.trigger")) continue;
+
+                Optional<GameMode> optGameMode = entity.get(Keys.GAME_MODE);
+                if (optGameMode.isPresent() && ignoredGameModes.contains(optGameMode.get())) {
+                    continue;
+                }
 
                 final PitfallSpongeEditor editor = new PitfallSpongeEditor(world);
 
