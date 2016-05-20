@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 
-@Plugin(id = "com.skelril.pitfall", name = "Pitfall", version = "2.3", description = "Make traps! Catch griefers!")
+@Plugin(id = "pitfall", name = "Pitfall", version = "2.3", description = "Make traps! Catch griefers!")
 public class PitfallPlugin {
 
     private static PitfallPlugin inst;
