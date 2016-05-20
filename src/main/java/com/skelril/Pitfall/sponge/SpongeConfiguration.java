@@ -1,23 +1,21 @@
 package com.skelril.Pitfall.sponge;
 
-import com.skelril.Pitfall.config.YAMLConfiguration;
-import com.skelril.Pitfall.util.yaml.YAMLProcessor;
+import com.google.common.reflect.TypeToken;
+import com.skelril.Pitfall.config.ConfigurateConfiguration;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.config.ConfigManager;
-import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
-import org.spongepowered.api.item.ItemType;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-public class SpongeConfiguration extends YAMLConfiguration {
-    public SpongeConfiguration(YAMLProcessor config) {
+public class SpongeConfiguration extends ConfigurateConfiguration {
+    public SpongeConfiguration(ConfigurationLoader<CommentedConfigurationNode> config) {
         super(config);
     }
 
@@ -31,28 +29,31 @@ public class SpongeConfiguration extends YAMLConfiguration {
 
     @Override
     public void load() {
+        super.load();
+
+        // Target Block
+        targetType = Sponge.getRegistry().getType(BlockType.class, node.getNode("target-block", "name").getString(BlockTypes.CLAY.getId())).get();
+
         try {
-            config.load();
-        } catch (IOException e) {
+            blackListedBlocks = node.getNode("blacklist", "blacklisted-blocks").getList(TypeToken.of(String.class), Arrays.asList(
+                    BlockTypes.CHEST.getId(), BlockTypes.TRAPPED_CHEST.getId(), BlockTypes.STANDING_SIGN.getId()
+            ));
+        } catch (ObjectMappingException e) {
             e.printStackTrace();
         }
 
-        // Target Block
-        targetType = Sponge.getRegistry().getType(BlockType.class, config.getString("target-block.name", BlockTypes.CLAY.getId())).get();
+        try {
+            ignoredGameModes = node.getNode("ignored-gamemodes").getList(TypeToken.of(String.class), Arrays.asList(
+                    GameModes.SPECTATOR.getId()
+            ));
+        } catch (ObjectMappingException e) {
+            e.printStackTrace();
+        }
 
-        blackListedBlocks = config.getStringList("blacklist.blacklisted-blocks", Arrays.asList(
-                BlockTypes.CHEST.getId(), BlockTypes.TRAPPED_CHEST.getId(), BlockTypes.STANDING_SIGN.getId()
-        ));
-
-        ignoredGameModes = config.getStringList("ignored-gamemodes", Arrays.asList(
-                GameModes.SPECTATOR.getId()
-        ));
-
-        super.load();
-    }
-
-    @Override
-    public File getWorkingDirectory() {
-        return PitfallPlugin.inst().getDataFolder();
+        try {
+            config.save(node);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

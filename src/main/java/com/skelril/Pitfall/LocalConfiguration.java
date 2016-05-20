@@ -39,14 +39,4 @@ public abstract class LocalConfiguration {
      * Loads the configuration.
      */
     public abstract void load();
-
-    /**
-     * Get the working directory to work from.
-     *
-     * @return
-     */
-    public File getWorkingDirectory() {
-
-        return new File(".");
-    }
 }

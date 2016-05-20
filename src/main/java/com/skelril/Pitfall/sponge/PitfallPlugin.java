@@ -2,8 +2,6 @@ package com.skelril.Pitfall.sponge;
 
 import com.google.inject.Inject;
 import com.skelril.Pitfall.LocalConfiguration;
-import com.skelril.Pitfall.util.yaml.YAMLFormat;
-import com.skelril.Pitfall.util.yaml.YAMLProcessor;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
@@ -51,17 +49,9 @@ public class PitfallPlugin {
     @Listener
     public void onStart(GameStartingServerEvent event) {
         // Config
-        File configFile = new File(getDataFolder(), "config.yml");
-        boolean newFile = initConfig(configFile);
-        config = new SpongeConfiguration(new YAMLProcessor(
-                configFile,
-                true,
-                YAMLFormat.EXTENDED
-        ));
+        ConfigManager service = Sponge.getGame().getConfigManager();
 
-        if (newFile) {
-            config.init();
-        }
+        config = new SpongeConfiguration(service.getPluginConfig(this).getConfig());
         config.load();
 
         // New version printing
