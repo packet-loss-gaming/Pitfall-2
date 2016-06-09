@@ -16,5 +16,5 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.spongepowered', name: 'spongeapi', version: '4.+'
+    compile group: 'org.spongepowered', name: 'spongeapi', version: '5.+'
 }
