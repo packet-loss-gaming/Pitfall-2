@@ -33,6 +33,8 @@ import org.spongepowered.api.entity.living.Creature;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -46,7 +48,6 @@ public class PitfallSpongeWorker extends PitfallWorker<World, BlockType, GameMod
     private int defaultReturnDelay = 60;
 
     public PitfallSpongeWorker() {
-        targeted.add(Player.class);
         blackListedBlocks.add(BlockTypes.AIR);
     }
 
@@ -61,6 +62,11 @@ public class PitfallSpongeWorker extends PitfallWorker<World, BlockType, GameMod
     @Override
     public void run() {
         for (final World world : Sponge.getServer().getWorlds()) {
+            Collection<Player> players = world.getPlayers();
+            if (players.isEmpty()) {
+                continue;
+            }
+
             Collection<Entity> entities = world.getEntities(a -> {
                 for (Class clazz : targeted) {
                     if (clazz.isInstance(a)) {
@@ -69,8 +75,9 @@ public class PitfallSpongeWorker extends PitfallWorker<World, BlockType, GameMod
                 }
                 return false;
             });
-            for (final Entity entity : entities) {
+            entities.addAll(players);
 
+            for (final Entity entity : entities) {
                 // Perform some checks to see if we should precede
                 if (entity instanceof Player && !((Player) entity).hasPermission("pitfall.trigger")) continue;
 
