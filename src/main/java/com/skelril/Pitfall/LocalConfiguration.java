@@ -33,6 +33,7 @@ public abstract class LocalConfiguration {
     public int destrutiveHeight;
     public int trapDelay;
     public int returnDelay;
+    public boolean enableForNoPlayerWorlds;
     public boolean enableItemTrap;
     public boolean enableMonsterTrap;
 

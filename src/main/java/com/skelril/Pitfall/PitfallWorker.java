@@ -34,6 +34,7 @@ public abstract class PitfallWorker<World, Type, GameMode> implements Runnable {
 
     public abstract void revertAll();
 
+    public abstract void activateForPlayerlessWorlds(boolean enable);
     public abstract void activateItemCheck(boolean enable);
     public abstract void activateCreatureCheck(boolean enable);
 

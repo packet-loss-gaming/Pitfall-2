@@ -57,6 +57,7 @@ public class ConfigurateConfiguration extends LocalConfiguration {
         destrutiveHeight = node.getNode("limits", "destructive-height").getInt(1);
         trapDelay = node.getNode("trap-delay").getInt(2);
         returnDelay = node.getNode("return-delay").getInt(60);
+        enableForNoPlayerWorlds = node.getNode("enable-for-no-player-worlds").getBoolean(false);
         enableItemTrap = node.getNode("enable-item-detection").getBoolean(true);
         enableMonsterTrap = node.getNode("enable-monster-detection").getBoolean(true);
     }

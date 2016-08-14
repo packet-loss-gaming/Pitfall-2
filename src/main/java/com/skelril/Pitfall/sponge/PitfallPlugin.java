@@ -85,6 +85,7 @@ public class PitfallPlugin {
         pitfallSpongeWorker = new PitfallSpongeWorker();
         pitfallSpongeWorker.setDefaultTrapDelay(config.trapDelay);
         pitfallSpongeWorker.setDefaultReturnDelay(config.returnDelay);
+        pitfallSpongeWorker.activateForPlayerlessWorlds(config.enableForNoPlayerWorlds);
         pitfallSpongeWorker.activateItemCheck(config.enableItemTrap);
         pitfallSpongeWorker.activateCreatureCheck(config.enableMonsterTrap);
         pitfallSpongeWorker.setMaxRadius(config.maxRadius);

@@ -47,6 +47,8 @@ public class PitfallSpongeWorker extends PitfallWorker<World, BlockType, GameMod
     private int defaultTrapDelay = 2;
     private int defaultReturnDelay = 60;
 
+    private boolean runForPlayerlessWorlds = false;
+
     public PitfallSpongeWorker() {
         blackListedBlocks.add(BlockTypes.AIR);
     }
@@ -63,7 +65,7 @@ public class PitfallSpongeWorker extends PitfallWorker<World, BlockType, GameMod
     public void run() {
         for (final World world : Sponge.getServer().getWorlds()) {
             Collection<Player> players = world.getPlayers();
-            if (players.isEmpty()) {
+            if (!runForPlayerlessWorlds && players.isEmpty()) {
                 continue;
             }
 
@@ -113,6 +115,11 @@ public class PitfallSpongeWorker extends PitfallWorker<World, BlockType, GameMod
                 }
             }
         }
+    }
+
+    @Override
+    public void activateForPlayerlessWorlds(boolean enable) {
+        runForPlayerlessWorlds = enable;
     }
 
     @Override
