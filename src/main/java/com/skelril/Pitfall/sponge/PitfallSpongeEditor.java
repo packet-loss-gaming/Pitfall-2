@@ -26,6 +26,7 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.world.BlockChangeFlag;
+import org.spongepowered.api.world.BlockChangeFlags;
 import org.spongepowered.api.world.World;
 
 import java.util.ArrayList;
@@ -57,8 +58,7 @@ public class PitfallSpongeEditor extends PitfallEditor<World, BlockType> {
                 pt.getY(),
                 pt.getZ(),
                 blockType,
-                BlockChangeFlag.ALL,
-                Cause.source(PitfallPlugin.container()).build()
+                BlockChangeFlags.ALL
         );
         return true;
     }
@@ -71,7 +71,7 @@ public class PitfallSpongeEditor extends PitfallEditor<World, BlockType> {
     @Override
     public void revertAll() {
         for (BlockSnapshot snapshot : oldStates) {
-            snapshot.restore(true, BlockChangeFlag.ALL);
+            snapshot.restore(true, BlockChangeFlags.ALL);
         }
     }
 }

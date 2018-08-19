@@ -1,5 +1,5 @@
 group 'com.skelril'
-version '2.4-SNAPSHOT'
+version '2.5-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'maven'
@@ -16,5 +16,5 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.spongepowered', name: 'spongeapi', version: '5.+'
+    compile group: 'org.spongepowered', name: 'spongeapi', version: '7.+'
 }
