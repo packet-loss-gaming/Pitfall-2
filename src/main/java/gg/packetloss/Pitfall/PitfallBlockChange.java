@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Wyatt Childers.
+ * Copyright (c) 2019 Wyatt Childers.
  *
  * This file is part of Pitfall.
  *
@@ -15,24 +15,13 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with Pitfall.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-package com.skelril.Pitfall.util.yaml;
-
-/**
- * YAMLProcessor exception.
  *
- * Original for WorldEdit, licensed under the
- * GNU LESSER GENERAL PUBLIC LICENSE Version 3
  */
-public class YAMLProcessorException extends Exception {
-    private static final long serialVersionUID = -2442886939908724203L;
 
-    public YAMLProcessorException() {
-        super();
-    }
+package gg.packetloss.Pitfall;
 
-    public YAMLProcessorException(String msg) {
-        super(msg);
-    }
+public interface PitfallBlockChange<Type> {
+    public Type getNewType();
+    public Point getTargetPoint();
+    public boolean isAllowed();
 }

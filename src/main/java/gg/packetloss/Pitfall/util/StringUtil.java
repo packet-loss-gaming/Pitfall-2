@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Wyatt Childers.
+ * Copyright (c) 2019 Wyatt Childers.
  *
  * This file is part of Pitfall.
  *
@@ -15,9 +15,10 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with Pitfall.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-package com.skelril.Pitfall.util;
+package gg.packetloss.Pitfall.util;
 
 import java.util.Collection;
 import java.util.Map;

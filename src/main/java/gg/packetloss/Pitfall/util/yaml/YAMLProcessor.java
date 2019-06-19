@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Wyatt Childers.
+ * Copyright (c) 2019 Wyatt Childers.
  *
  * This file is part of Pitfall.
  *
@@ -15,19 +15,17 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with Pitfall.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-package com.skelril.Pitfall.util.yaml;
+package gg.packetloss.Pitfall.util.yaml;
 
-import com.skelril.Pitfall.util.StringUtil;
+import gg.packetloss.Pitfall.util.StringUtil;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
-import org.yaml.snakeyaml.emitter.ScalarAnalysis;
-import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.reader.UnicodeReader;
-import org.yaml.snakeyaml.representer.Represent;
 import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.*;

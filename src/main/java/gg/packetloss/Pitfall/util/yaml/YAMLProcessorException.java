@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Wyatt Childers.
+ * Copyright (c) 2019 Wyatt Childers.
  *
  * This file is part of Pitfall.
  *
@@ -15,38 +15,25 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with Pitfall.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-package com.skelril.Pitfall;
+package gg.packetloss.Pitfall.util.yaml;
 
-import java.io.File;
+/**
+ * YAMLProcessor exception.
+ *
+ * Original for WorldEdit, licensed under the
+ * GNU LESSER GENERAL PUBLIC LICENSE Version 3
+ */
+public class YAMLProcessorException extends Exception {
+    private static final long serialVersionUID = -2442886939908724203L;
 
-public abstract class LocalConfiguration {
+    public YAMLProcessorException() {
+        super();
+    }
 
-    // Black List
-    public boolean useBlackList;
-    public boolean ignorePassable;
-
-    // Trap Settings
-    public int maxRadius;
-    public int destrutiveHeight;
-    public int trapDelay;
-    public int returnDelay;
-    public boolean enableItemTrap;
-    public boolean enableMonsterTrap;
-
-    /**
-     * Loads the configuration.
-     */
-    public abstract void load();
-
-    /**
-     * Get the working directory to work from.
-     *
-     * @return
-     */
-    public File getWorkingDirectory() {
-
-        return new File(".");
+    public YAMLProcessorException(String msg) {
+        super(msg);
     }
 }

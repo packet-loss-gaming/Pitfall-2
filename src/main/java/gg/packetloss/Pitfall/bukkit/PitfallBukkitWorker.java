@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Wyatt Childers.
+ * Copyright (c) 2019 Wyatt Childers.
  *
  * This file is part of Pitfall.
  *
@@ -15,15 +15,16 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with Pitfall.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-package com.skelril.Pitfall.bukkit;
+package gg.packetloss.Pitfall.bukkit;
 
-import com.skelril.Pitfall.PitfallBlockChange;
-import com.skelril.Pitfall.PitfallWorker;
-import com.skelril.Pitfall.Point;
-import com.skelril.Pitfall.bukkit.event.PitfallBlockChangeEvent;
-import com.skelril.Pitfall.bukkit.event.PitfallTriggerEvent;
+import gg.packetloss.Pitfall.PitfallBlockChange;
+import gg.packetloss.Pitfall.PitfallWorker;
+import gg.packetloss.Pitfall.Point;
+import gg.packetloss.Pitfall.bukkit.event.PitfallBlockChangeEvent;
+import gg.packetloss.Pitfall.bukkit.event.PitfallTriggerEvent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;

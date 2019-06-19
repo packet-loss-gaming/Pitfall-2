@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Wyatt Childers.
+ * Copyright (c) 2019 Wyatt Childers.
  *
  * This file is part of Pitfall.
  *
@@ -15,41 +15,53 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with Pitfall.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-package com.skelril.Pitfall.bukkit.event;
+package gg.packetloss.Pitfall.bukkit.event;
 
-import com.skelril.Pitfall.PitfallBlockChange;
-import com.skelril.Pitfall.Point;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.EntityEvent;
 
-import java.util.Objects;
-
-public class PitfallBlockChangeEvent extends Event implements Cancellable,
-        PitfallBlockChange<Material> {
+public class PitfallTriggerEvent extends EntityEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled = false;
-    private Location target;
-    private Material newType = Material.AIR;
+    private final Block block;
+    private int triggerDelay;
+    private int returnDelay;
 
-    public PitfallBlockChangeEvent(Location target) {
-        this.target = target;
+    public PitfallTriggerEvent(Entity entity, Block block, int triggerDelay, int returnDelay) {
+        super(entity);
+        this.block = block;
+        this.triggerDelay = triggerDelay;
+        this.returnDelay = returnDelay;
     }
 
-    public Location getLocation() {
-        return target;
+    public Block getBlock() {
+        return block;
     }
 
-    public void setLocation(Location target) {
-        Validate.notNull(target);
-        Validate.isTrue(Objects.equals(this.target.getWorld(), target.getWorld()));
-        this.target = target;
+    public int getTriggerDelay() {
+        return triggerDelay;
+    }
+
+    public void setTriggerDelay(int triggerDelay) {
+        Validate.isTrue(triggerDelay > 0, "Trigger delay cannot be less than 1 tick.");
+        this.triggerDelay = triggerDelay;
+    }
+
+    public int getReturnDelay() {
+        return returnDelay;
+    }
+
+    public void setReturnDelay(int returnDelay) {
+        Validate.isTrue(returnDelay > 0, "Return delay cannot be less than 1 tick.");
+        this.returnDelay = returnDelay;
     }
 
     @Override
@@ -69,24 +81,5 @@ public class PitfallBlockChangeEvent extends Event implements Cancellable,
 
     public static HandlerList getHandlerList() {
         return handlers;
-    }
-
-    @Override
-    public Material getNewType() {
-        return newType;
-    }
-
-    public void setNewType(Material newType) {
-        this.newType = newType;
-    }
-
-    @Override
-    public Point getTargetPoint() {
-        return new Point(target.getBlockX(), target.getBlockY(), target.getBlockZ());
-    }
-
-    @Override
-    public boolean isAllowed() {
-        return !cancelled;
     }
 }

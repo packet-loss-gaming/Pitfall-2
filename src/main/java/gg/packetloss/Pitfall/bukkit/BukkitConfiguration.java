@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Wyatt Childers.
+ * Copyright (c) 2019 Wyatt Childers.
  *
  * This file is part of Pitfall.
  *
@@ -15,12 +15,13 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with Pitfall.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-package com.skelril.Pitfall.bukkit;
+package gg.packetloss.Pitfall.bukkit;
 
-import com.skelril.Pitfall.config.YAMLConfiguration;
-import com.skelril.Pitfall.util.yaml.YAMLProcessor;
+import gg.packetloss.Pitfall.config.YAMLConfiguration;
+import gg.packetloss.Pitfall.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 
 import java.io.File;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Wyatt Childers.
+ * Copyright (c) 2019 Wyatt Childers.
  *
  * This file is part of Pitfall.
  *
@@ -15,12 +15,39 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with Pitfall.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-package com.skelril.Pitfall;
+package gg.packetloss.Pitfall;
 
-public interface PitfallBlockChange<Type> {
-    public Type getNewType();
-    public Point getTargetPoint();
-    public boolean isAllowed();
+import java.io.File;
+
+public abstract class LocalConfiguration {
+
+    // Black List
+    public boolean useBlackList;
+    public boolean ignorePassable;
+
+    // Trap Settings
+    public int maxRadius;
+    public int destrutiveHeight;
+    public int trapDelay;
+    public int returnDelay;
+    public boolean enableItemTrap;
+    public boolean enableMonsterTrap;
+
+    /**
+     * Loads the configuration.
+     */
+    public abstract void load();
+
+    /**
+     * Get the working directory to work from.
+     *
+     * @return
+     */
+    public File getWorkingDirectory() {
+
+        return new File(".");
+    }
 }
