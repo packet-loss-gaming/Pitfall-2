@@ -19,7 +19,6 @@
 
 package com.skelril.Pitfall.bukkit;
 
-import com.skelril.Pitfall.DataPair;
 import com.skelril.Pitfall.PitfallEditor;
 import com.skelril.Pitfall.Point;
 import org.bukkit.Material;
@@ -30,7 +29,7 @@ import org.bukkit.block.BlockState;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PitfallBukkitEditor extends PitfallEditor<World, DataPair<Material, Byte>> {
+public class PitfallBukkitEditor extends PitfallEditor<World, Material> {
 
     private List<BlockState> oldStates = new LinkedList<BlockState>();
 
@@ -49,16 +48,17 @@ public class PitfallBukkitEditor extends PitfallEditor<World, DataPair<Material,
     }
 
     @Override
-    public boolean edit(Point pt, DataPair<Material, Byte> type) {
+    public boolean edit(Point pt, Material newType) {
         Block block = getWorld().getBlockAt(pt.getX(), pt.getY(), pt.getZ());
         oldStates.add(block.getState());
-        return block.setTypeIdAndData(type.getType().getId(), type.getData(), true);
+        block.setType(newType, true);
+        return true;
     }
 
     @Override
-    public DataPair<Material, Byte> getAt(Point pt) {
+    public Material getAt(Point pt) {
         Block block = getWorld().getBlockAt(pt.getX(), pt.getY(), pt.getZ());
-        return new DataPair<Material, Byte>(block.getType(), block.getData());
+        return block.getType();
     }
 
     @Override

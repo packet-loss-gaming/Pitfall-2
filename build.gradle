@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Wyatt Childers.
+ * Copyright (c) 2019 Wyatt Childers.
  *
  * This file is part of Pitfall.
  *
@@ -15,30 +15,35 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with Pitfall.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-package com.skelril.Pitfall;
+apply plugin: 'java'
 
-public abstract class PitfallEditor<World, Type> {
+repositories {
+    mavenCentral()
 
-    private World world;
+    maven {
+        name 'Spigot Repository'
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+}
 
-    public PitfallEditor(World world) {
-        this.world = world;
+dependencies {
+    compile group: 'org.bukkit', name: 'bukkit', version: '1.14.2-R0.1-SNAPSHOT'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+version = '2.1.2'
+
+processResources {
+    from (sourceSets.main.resources.srcDirs) {
+        expand 'projectVersion': project.version
+        include 'plugin.yml'
     }
 
-    public abstract int getMinY();
-    public abstract int getMaxY();
-
-    public World getWorld() {
-        return world;
+    from (sourceSets.main.resources.srcDirs) {
+        exclude 'plugin.yml'
     }
-
-    public void setWorld(World world) {
-        this.world = world;
-    }
-
-    public abstract boolean edit(Point pt, Type type);
-    public abstract Type getAt(Point pt);
-    public abstract void revertAll();
 }

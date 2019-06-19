@@ -19,7 +19,6 @@
 
 package com.skelril.Pitfall.bukkit.event;
 
-import com.skelril.Pitfall.DataPair;
 import com.skelril.Pitfall.PitfallBlockChange;
 import com.skelril.Pitfall.Point;
 import org.apache.commons.lang.Validate;
@@ -29,13 +28,15 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import java.util.Objects;
+
 public class PitfallBlockChangeEvent extends Event implements Cancellable,
-        PitfallBlockChange<DataPair<Material, Byte>> {
+        PitfallBlockChange<Material> {
 
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled = false;
     private Location target;
-    private DataPair<Material, Byte> newType = new DataPair<Material, Byte>(Material.AIR, (byte) 0);
+    private Material newType = Material.AIR;
 
     public PitfallBlockChangeEvent(Location target) {
         this.target = target;
@@ -47,7 +48,7 @@ public class PitfallBlockChangeEvent extends Event implements Cancellable,
 
     public void setLocation(Location target) {
         Validate.notNull(target);
-        Validate.isTrue(this.target.getWorld().equals(target.getWorld()));
+        Validate.isTrue(Objects.equals(this.target.getWorld(), target.getWorld()));
         this.target = target;
     }
 
@@ -71,11 +72,11 @@ public class PitfallBlockChangeEvent extends Event implements Cancellable,
     }
 
     @Override
-    public DataPair<Material, Byte> getNewType() {
+    public Material getNewType() {
         return newType;
     }
 
-    public void setNewType(DataPair<Material, Byte> newType) {
+    public void setNewType(Material newType) {
         this.newType = newType;
     }
 

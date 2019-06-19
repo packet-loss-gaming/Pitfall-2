@@ -12,8 +12,9 @@
 # Netbeans
 /nbproject
 
-# Maven
-/target
+# Gradle
+.gradle
+build/
 
 # vim
 .*.sw[a-p]

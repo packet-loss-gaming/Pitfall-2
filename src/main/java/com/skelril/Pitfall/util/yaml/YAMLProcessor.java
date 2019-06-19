@@ -81,12 +81,13 @@ public class YAMLProcessor extends YAMLNode {
     private final Map<String, String> comments = new HashMap<String, String>();
 
     public YAMLProcessor(File file, boolean writeDefaults, YAMLFormat format) {
-        super(new LinkedHashMap<String, Object>(), writeDefaults);
+        super(new LinkedHashMap<>(), writeDefaults);
         this.format = format;
 
-        DumperOptions options = new FancyDumperOptions();
+        DumperOptions options = new DumperOptions();
         options.setIndent(4);
         options.setDefaultFlowStyle(format.getStyle());
+        options.setDefaultScalarStyle(DumperOptions.ScalarStyle.LITERAL);
         Representer representer = new FancyRepresenter();
         representer.setDefaultFlowStyle(format.getStyle());
 
@@ -112,7 +113,7 @@ public class YAMLProcessor extends YAMLNode {
             if (stream == null) throw new IOException("Stream is null!");
             read(yaml.load(new UnicodeReader(stream)));
         } catch (YAMLProcessorException e) {
-            root = new LinkedHashMap<String, Object>();
+            root = new LinkedHashMap<>();
         } finally {
             try {
                 if (stream != null) {
@@ -221,9 +222,9 @@ public class YAMLProcessor extends YAMLNode {
     private void read(Object input) throws YAMLProcessorException {
         try {
             if (null == input) {
-                root = new LinkedHashMap<String, Object>();
+                root = new LinkedHashMap<>();
             } else {
-                root = new LinkedHashMap<String, Object>((Map<String, Object>) input);
+                root = new LinkedHashMap<>((Map<String, Object>) input);
             }
         } catch (ClassCastException e) {
             throw new YAMLProcessorException("Root document must be an key-value structure");
@@ -304,30 +305,12 @@ public class YAMLProcessor extends YAMLNode {
      * @return
      */
     public static YAMLNode getEmptyNode(boolean writeDefaults) {
-        return new YAMLNode(new LinkedHashMap<String, Object>(), writeDefaults);
-    }
-
-    // This will be included in snakeyaml 1.10, but until then we have to do it manually.
-    private class FancyDumperOptions extends DumperOptions {
-        @Override
-        public DumperOptions.ScalarStyle calculateScalarStyle(ScalarAnalysis analysis,
-                                                              DumperOptions.ScalarStyle style) {
-            if (format == YAMLFormat.EXTENDED
-                    && (analysis.scalar.contains("\n") || analysis.scalar.contains("\r"))) {
-                return ScalarStyle.LITERAL;
-            } else {
-                return super.calculateScalarStyle(analysis, style);
-            }
-        }
+        return new YAMLNode(new LinkedHashMap<>(), writeDefaults);
     }
 
     private static class FancyRepresenter extends Representer {
         public FancyRepresenter() {
-            this.nullRepresenter = new Represent() {
-                public Node representData(Object o) {
-                    return representScalar(Tag.NULL, "");
-                }
-            };
+            this.nullRepresenter = o -> representScalar(Tag.NULL, "");
         }
     }
 }

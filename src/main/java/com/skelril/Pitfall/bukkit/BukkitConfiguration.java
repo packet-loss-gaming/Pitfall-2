@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BukkitConfiguration extends YAMLConfiguration {
     private static final PitfallPlugin plugin = PitfallPlugin.inst();
@@ -37,10 +38,9 @@ public class BukkitConfiguration extends YAMLConfiguration {
 
     // Target Block
     public Material targetType;
-    public byte targetData;
 
     // Black List
-    public List<String> blackListedBlocks;
+    public List<Material> blackListedBlocks;
 
 
     @Override
@@ -52,12 +52,13 @@ public class BukkitConfiguration extends YAMLConfiguration {
         }
 
         // Target Block
-        targetType = Material.valueOf(config.getString("target-block.name", Material.CLAY.toString()));
-        targetData = (byte) config.getInt("target-block.data", 0);
+        String targetTypeIds = config.getString("target-block.name", Material.CLAY.toString());
+        targetType = Material.getMaterial(targetTypeIds);
 
-        blackListedBlocks = config.getStringList("blacklist.blacklisted-blocks", Arrays.asList(
-                Material.CHEST + ":-1", Material.TRAPPED_CHEST + ":-1", Material.SIGN_POST + ":-1"
+        List<String> blackListedBlockIds = config.getStringList("blacklist.blacklisted-blocks", Arrays.asList(
+                Material.CHEST.toString(), Material.TRAPPED_CHEST.toString(), Material.SHULKER_BOX.toString()
         ));
+        blackListedBlocks = blackListedBlockIds.stream().map(Material::getMaterial).collect(Collectors.toList());
 
         super.load();
     }

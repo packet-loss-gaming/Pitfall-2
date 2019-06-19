@@ -19,7 +19,7 @@
 
 package com.skelril.Pitfall;
 
-public interface PitfallBlockChange<Type extends DataPair<?, ?>> {
+public interface PitfallBlockChange<Type> {
     public Type getNewType();
     public Point getTargetPoint();
     public boolean isAllowed();

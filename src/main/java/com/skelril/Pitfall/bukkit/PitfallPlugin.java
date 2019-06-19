@@ -19,7 +19,6 @@
 
 package com.skelril.Pitfall.bukkit;
 
-import com.skelril.Pitfall.DataPair;
 import com.skelril.Pitfall.LocalConfiguration;
 import com.skelril.Pitfall.util.yaml.YAMLFormat;
 import com.skelril.Pitfall.util.yaml.YAMLProcessor;
@@ -69,32 +68,18 @@ public class PitfallPlugin extends JavaPlugin {
         pitfallBukkitWorker.activateCreatureCheck(config.enableMonsterTrap);
         pitfallBukkitWorker.setMaxRadius(config.maxRadius);
         pitfallBukkitWorker.setDestructiveHeight(config.destrutiveHeight);
-        pitfallBukkitWorker.setTargetBlock(new DataPair<Material, Byte>(config.targetType, config.targetData));
+        pitfallBukkitWorker.setTargetBlock(config.targetType);
 
         // Blacklist setup
         if (config.useBlackList) {
-
-            Set<DataPair<Material, Byte>> exceptions = new HashSet<DataPair<Material, Byte>>();
-            Set<DataPair<Material, Byte>> blackList = pitfallBukkitWorker.getBlackList();
-
-            for (String type : config.blackListedBlocks) {
-                String[] splits = type.split(":");
-                if (splits.length < 2) continue;
-                Byte data = Byte.valueOf(splits[1]);
-                if (splits[0].startsWith("-")) {
-                    exceptions.add(new DataPair<Material, Byte>(Material.getMaterial(splits[0].substring(1)), data));
-                    continue;
-                }
-                blackList.add(new DataPair<Material, Byte>(Material.getMaterial(splits[0]), (byte) -1));
-            }
+            Set<Material> blackList = pitfallBukkitWorker.getBlackList();
+            blackList.addAll(config.blackListedBlocks);
 
             if (config.ignorePassable) {
                 for (Material material : Material.values()) {
-                    if (material.isBlock() && !material.isSolid()) blackList.add(new DataPair<Material, Byte>(material, (byte) -1));
+                    if (material.isBlock() && !material.isSolid()) blackList.add(material);
                 }
             }
-
-            blackList.removeAll(exceptions);
         }
 
         // Start the watcher
