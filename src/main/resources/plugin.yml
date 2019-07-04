@@ -1,5 +1,5 @@
 name: Pitfall
-main: com.skelril.Pitfall.bukkit.PitfallPlugin
+main: gg.packetloss.Pitfall.bukkit.PitfallPlugin
 version: ${projectVersion}
 author: Dark_Arc, petrifiednightmares
 dev-url: http://dev.bukkit.org/server-mods/pitfall/
