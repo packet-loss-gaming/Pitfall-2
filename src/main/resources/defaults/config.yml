@@ -1,0 +1,16 @@
+target-block:
+  name: CLAY
+blacklist:
+  blacklisted-blocks:
+    - CHEST
+    - TRAPPED_CHEST
+    - SHULKER_BOX
+  enable: true
+  ignore-passible: true
+limits:
+  max-radius: 5
+  destructive-height: 1
+trap-delay: 2
+return-delay: 60
+enable-item-detection: true
+enable-monster-detection: true
