@@ -38,7 +38,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 group = 'gg.packetloss'
-version = '2.1.2'
+version = '2.2-SNAPSHOT'
 
 processResources {
     from (sourceSets.main.resources.srcDirs) {
