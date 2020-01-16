@@ -71,7 +71,9 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
             for (final Entity entity : world.getEntitiesByClasses(targeted.toArray(new Class[0]))) {
 
                 // Perform some checks to see if we should precede
-                if (entity instanceof Player && !((Player) entity).hasPermission("pitfall.trigger")) continue;
+                if (checkPermissions) {
+                    if (entity instanceof Player && !((Player) entity).hasPermission("pitfall.trigger")) continue;
+                }
 
                 final Block h = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
                 final Block b = h.getRelative(BlockFace.DOWN);

@@ -12,5 +12,6 @@ limits:
   destructive-height: 1
 trap-delay: 2
 return-delay: 60
+check-pitfall-permission: false
 enable-item-detection: true
 enable-monster-detection: true

@@ -30,6 +30,7 @@ public abstract class PitfallWorker<World, Type> implements Runnable {
     protected int destructiveHeight = 1;
     protected Type targetBlock;
     protected Set<Type> blackListedBlocks = new HashSet<Type>();
+    protected boolean checkPermissions = false;
 
     public abstract void revertAll();
 
@@ -52,6 +53,10 @@ public abstract class PitfallWorker<World, Type> implements Runnable {
 
     public Set<Type> getBlackList() {
         return blackListedBlocks;
+    }
+
+    public void setCheckPermissions(boolean checkPermissions) {
+        this.checkPermissions = checkPermissions;
     }
 
     public int trigger(PitfallEditor<World, Type> editor, Point origin) {

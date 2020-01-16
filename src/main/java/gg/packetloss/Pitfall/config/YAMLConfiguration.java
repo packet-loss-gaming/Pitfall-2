@@ -53,6 +53,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         enableItemTrap = config.getBoolean("enable-item-detection", true);
         enableMonsterTrap = config.getBoolean("enable-monster-detection", true);
 
+        // Permission related setting
+        checkPitfallPermission = config.getBoolean("check-pitfall-permission", false);
+
         // Save any added values
         config.save();
     }

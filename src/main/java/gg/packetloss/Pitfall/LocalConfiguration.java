@@ -36,6 +36,9 @@ public abstract class LocalConfiguration {
     public boolean enableItemTrap;
     public boolean enableMonsterTrap;
 
+    // Permission related setting
+    public boolean checkPitfallPermission;
+
     /**
      * Loads the configuration.
      */

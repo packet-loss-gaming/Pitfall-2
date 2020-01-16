@@ -43,7 +43,6 @@ public class BukkitConfiguration extends YAMLConfiguration {
     // Black List
     public List<Material> blackListedBlocks;
 
-
     @Override
     public void load() {
         try {
