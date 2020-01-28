@@ -25,10 +25,7 @@ import gg.packetloss.Pitfall.PitfallWorker;
 import gg.packetloss.Pitfall.Point;
 import gg.packetloss.Pitfall.bukkit.event.PitfallBlockChangeEvent;
 import gg.packetloss.Pitfall.bukkit.event.PitfallTriggerEvent;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Creature;
@@ -69,10 +66,15 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
     public void run() {
         for (final World world : plugin.getServer().getWorlds()) {
             for (final Entity entity : world.getEntitiesByClasses(targeted.toArray(new Class[0]))) {
+                if (entity instanceof Player) {
+                    Player player = (Player) entity;
+                    if (ignoreSpectators && player.getGameMode() == GameMode.SPECTATOR) {
+                        continue;
+                    }
 
-                // Perform some checks to see if we should precede
-                if (checkPermissions) {
-                    if (entity instanceof Player && !((Player) entity).hasPermission("pitfall.trigger")) continue;
+                    if (checkPermissions && !player.hasPermission("pitfall.trigger")) {
+                        continue;
+                    }
                 }
 
                 final Block h = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);

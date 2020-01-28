@@ -35,6 +35,7 @@ public abstract class LocalConfiguration {
     public int returnDelay;
     public boolean enableItemTrap;
     public boolean enableMonsterTrap;
+    public boolean ignoreSpectators;
 
     // Permission related setting
     public boolean checkPitfallPermission;

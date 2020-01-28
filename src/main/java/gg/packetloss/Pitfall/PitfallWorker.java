@@ -30,6 +30,7 @@ public abstract class PitfallWorker<World, Type> implements Runnable {
     protected int destructiveHeight = 1;
     protected Type targetBlock;
     protected Set<Type> blackListedBlocks = new HashSet<Type>();
+    protected boolean ignoreSpectators = true;
     protected boolean checkPermissions = false;
 
     public abstract void revertAll();
@@ -55,6 +56,9 @@ public abstract class PitfallWorker<World, Type> implements Runnable {
         return blackListedBlocks;
     }
 
+    public void setIgnoreSpectators(boolean ignoreSpectators) {
+        this.ignoreSpectators = ignoreSpectators;
+    }
     public void setCheckPermissions(boolean checkPermissions) {
         this.checkPermissions = checkPermissions;
     }

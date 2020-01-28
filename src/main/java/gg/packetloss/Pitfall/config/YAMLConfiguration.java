@@ -52,6 +52,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         returnDelay = config.getInt("return-delay", 60);
         enableItemTrap = config.getBoolean("enable-item-detection", true);
         enableMonsterTrap = config.getBoolean("enable-monster-detection", true);
+        ignoreSpectators = config.getBoolean("ignore-spectators", true);
 
         // Permission related setting
         checkPitfallPermission = config.getBoolean("check-pitfall-permission", false);
