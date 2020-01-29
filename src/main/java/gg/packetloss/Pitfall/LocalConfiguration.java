@@ -31,6 +31,7 @@ public abstract class LocalConfiguration {
     // Trap Settings
     public int maxRadius;
     public int destrutiveHeight;
+    public int checkFrequency;
     public int trapDelay;
     public int returnDelay;
     public boolean enableItemTrap;

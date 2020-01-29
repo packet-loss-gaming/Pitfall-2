@@ -48,6 +48,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         // Trap Settings
         maxRadius = config.getInt("limits.max-radius", 5);
         destrutiveHeight = config.getInt("limits.destructive-height", 1);
+        checkFrequency = config.getInt("check-frequency", 5);
         trapDelay = config.getInt("trap-delay", 2);
         returnDelay = config.getInt("return-delay", 60);
         enableItemTrap = config.getBoolean("enable-item-detection", true);

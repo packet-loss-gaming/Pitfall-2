@@ -85,7 +85,12 @@ public class PitfallPlugin extends JavaPlugin {
         }
 
         // Start the watcher
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, pitfallBukkitWorker, 20 * 3, 5);
+        getServer().getScheduler().scheduleSyncRepeatingTask(
+                this,
+                pitfallBukkitWorker,
+                20 * 3,
+                config.checkFrequency
+        );
     }
 
     @Override
