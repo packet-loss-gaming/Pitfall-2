@@ -34,6 +34,7 @@ public abstract class LocalConfiguration {
     public int checkFrequency;
     public int trapDelay;
     public int returnDelay;
+    public boolean eagerMode;
     public boolean enableItemTrap;
     public boolean enableMonsterTrap;
     public boolean ignoreSpectators;

@@ -25,17 +25,18 @@ import gg.packetloss.Pitfall.PitfallWorker;
 import gg.packetloss.Pitfall.Point;
 import gg.packetloss.Pitfall.bukkit.event.PitfallBlockChangeEvent;
 import gg.packetloss.Pitfall.bukkit.event.PitfallTriggerEvent;
+import org.apache.commons.lang.CharUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
@@ -62,6 +63,72 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
         records.clear();
     }
 
+    private boolean checkFromPosition(Location location) {
+        location = location.clone();
+        final Block h = location.add(0, -1, 0).getBlock();
+        final Block b = location.add(0, -1, 0).getBlock();
+
+        Material hMat = h.getType();
+        Material bMat = b.getType();
+
+        return targetBlock.equals(bMat) && !checkBlackList(hMat);
+    }
+
+    private void activateAtBlock(Entity entity, Location location) {
+        Block triggeringBlock = location.clone().add(0, -2, 0).getBlock();
+        PitfallTriggerEvent event = new PitfallTriggerEvent(
+                entity,
+                triggeringBlock,
+                defaultTrapDelay,
+                defaultReturnDelay
+        );
+
+        server.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
+        server.getScheduler().runTaskLater(plugin, () -> {
+            final PitfallBukkitEditor record = new PitfallBukkitEditor(location.getWorld());
+
+            Block b1 = event.getBlock();
+            trigger(record, new Point(b1.getX(), b1.getY(), b1.getZ()));
+            records.add(record);
+            server.getScheduler().runTaskLater(plugin, () -> {
+                if (!records.contains(record)) return;
+                record.revertAll();
+                records.remove(record);
+            }, event.getReturnDelay());
+        }, event.getTriggerDelay());
+    }
+
+    private void getCheckLocations(Entity entity, Predicate<Location> consumer) {
+        Location location = entity.getLocation();
+        if (consumer.test(location.clone())) {
+            return;
+        }
+
+        if (!eagerMode || entity.getType() != EntityType.PLAYER) {
+            return;
+        }
+
+        // If eager mode is enabled, check blocks that the player may be standing on
+        for (double xMod : new double[] { 0, .4, -.4 }) {
+            for (double zMod : new double[] { 0, .4, -.4 }) {
+                Location testLoc = location.clone().add(xMod, 0, zMod);
+
+                // Skip already tested locations
+                if (testLoc.getBlockX() == location.getBlockX() && testLoc.getBlockZ() == location.getBlockZ()) {
+                    continue;
+                }
+
+                if (consumer.test(testLoc)) {
+                    return;
+                }
+            }
+        }
+    }
+
     @Override
     public void run() {
         for (final World world : plugin.getServer().getWorlds()) {
@@ -77,32 +144,20 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
                     }
                 }
 
-                final Block h = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
-                final Block b = h.getRelative(BlockFace.DOWN);
-
-                Material hMat = h.getType();
-                Material bMat = b.getType();
-
-                if (targetBlock.equals(bMat) && !checkBlackList(hMat)) {
-
-                    PitfallTriggerEvent event = new PitfallTriggerEvent(entity, b, defaultTrapDelay, defaultReturnDelay);
-                    server.getPluginManager().callEvent(event);
-                    final PitfallTriggerEvent finalEvent = event;
-                    if (finalEvent.isCancelled()) continue;
-
-                    server.getScheduler().runTaskLater(plugin, () -> {
-                        final PitfallBukkitEditor record = new PitfallBukkitEditor(world);
-
-                        Block b1 = finalEvent.getBlock();
-                        trigger(record, new Point(b1.getX(), b1.getY(), b1.getZ()));
-                        records.add(record);
-                        server.getScheduler().runTaskLater(plugin, () -> {
-                            if (!records.contains(record)) return;
-                            record.revertAll();
-                            records.remove(record);
-                        }, finalEvent.getReturnDelay());
-                    }, finalEvent.getTriggerDelay());
+                // Skip entities that are still falling
+                double entityY = entity.getLocation().getY();
+                if (entityY != Math.floor(entityY)) {
+                    continue;
                 }
+
+                getCheckLocations(entity, (testLoc) -> {
+                    if (checkFromPosition(testLoc)) {
+                        activateAtBlock(entity, testLoc);
+                        return true;
+                    }
+
+                    return false;
+                });
             }
         }
     }

@@ -14,6 +14,7 @@ check-frequency: 5
 trap-delay: 2
 return-delay: 60
 check-pitfall-permission: false
+eager-mode: true
 enable-item-detection: true
 enable-monster-detection: true
 ignore-spectators: true

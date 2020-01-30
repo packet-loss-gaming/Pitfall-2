@@ -64,6 +64,7 @@ public class PitfallPlugin extends JavaPlugin {
         pitfallBukkitWorker = new PitfallBukkitWorker();
         pitfallBukkitWorker.setDefaultTrapDelay(config.trapDelay);
         pitfallBukkitWorker.setDefaultReturnDelay(config.returnDelay);
+        pitfallBukkitWorker.setEagerMode(config.eagerMode);
         pitfallBukkitWorker.activateItemCheck(config.enableItemTrap);
         pitfallBukkitWorker.activateCreatureCheck(config.enableMonsterTrap);
         pitfallBukkitWorker.setMaxRadius(config.maxRadius);
