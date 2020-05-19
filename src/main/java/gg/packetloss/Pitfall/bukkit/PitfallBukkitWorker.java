@@ -45,8 +45,8 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
     private static final Server server = plugin.getServer();
     private static final Logger log = plugin.getLogger();
 
-    private Set<PitfallBukkitEditor> records = new CopyOnWriteArraySet<PitfallBukkitEditor>();
-    private Set<Class> targeted = new HashSet<Class>();
+    private Set<PitfallBukkitEditor> records = new CopyOnWriteArraySet<>();
+    private Set<Class<? extends Entity>> targeted = new HashSet<>();
     private int defaultTrapDelay = 2;
     private int defaultReturnDelay = 60;
 
@@ -145,6 +145,10 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
     public void run() {
         for (final World world : plugin.getServer().getWorlds()) {
             for (final Entity entity : world.getEntitiesByClasses(targeted.toArray(new Class[0]))) {
+                if (entity instanceof WaterMob || entity instanceof Flying) {
+                    continue;
+                }
+
                 if (entity instanceof Player) {
                     Player player = (Player) entity;
                     if (ignoreSpectators && player.getGameMode() == GameMode.SPECTATOR) {
@@ -186,9 +190,9 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
     @Override
     public void activateCreatureCheck(boolean enable) {
         if (enable) {
-            targeted.add(Creature.class);
+            targeted.add(LivingEntity.class);
         } else {
-            targeted.remove(Creature.class);
+            targeted.remove(LivingEntity.class);
         }
     }
 
