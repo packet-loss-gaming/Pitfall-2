@@ -102,9 +102,21 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
         }, event.getTriggerDelay());
     }
 
+    private boolean isChunkLoaded(Location location) {
+        return location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4);
+    }
+
+    private boolean testIfLoaded(Location location, Predicate<Location> consumer) {
+        if (!isChunkLoaded(location)) {
+            return false;
+        }
+
+        return consumer.test(location.clone());
+    }
+
     private void getCheckLocations(Entity entity, Predicate<Location> consumer) {
         Location location = entity.getLocation();
-        if (consumer.test(location.clone())) {
+        if (testIfLoaded(location.clone(), consumer)) {
             return;
         }
 
@@ -122,7 +134,7 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
                     continue;
                 }
 
-                if (consumer.test(testLoc)) {
+                if (testIfLoaded(testLoc, consumer)) {
                     return;
                 }
             }
