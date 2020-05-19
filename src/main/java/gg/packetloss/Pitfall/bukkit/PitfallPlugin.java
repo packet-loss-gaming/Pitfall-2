@@ -70,7 +70,7 @@ public class PitfallPlugin extends JavaPlugin {
         pitfallBukkitWorker.setMaxRadius(config.maxRadius);
         pitfallBukkitWorker.setDestructiveHeight(config.destrutiveHeight);
         pitfallBukkitWorker.setTargetBlock(config.targetType);
-        pitfallBukkitWorker.setIgnoreSpectators(config.enableMonsterTrap);
+        pitfallBukkitWorker.setIgnoreSpectators(config.ignoreSpectators);
         pitfallBukkitWorker.setCheckPermissions(config.checkPitfallPermission);
 
         // Blacklist setup
