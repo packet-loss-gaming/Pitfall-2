@@ -155,6 +155,10 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
                         continue;
                     }
 
+                    if (player.isSwimming()) {
+                        continue;
+                    }
+
                     if (checkPermissions && !player.hasPermission("pitfall.trigger")) {
                         continue;
                     }
