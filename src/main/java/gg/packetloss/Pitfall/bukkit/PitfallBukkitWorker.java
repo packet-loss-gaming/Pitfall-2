@@ -137,21 +137,50 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
         } else if (roughXMatch) {
             // We're roughly in the middle x wise, check to see if the nearest z block
             // looks weak.
-            if (isWeakPitfall(location.clone().add(0, 0, relativeZ < 0.5 ? -1 : 1))) {
-                consumer.test(location.clone());
+            Location adjustedZ = location.clone().add(0, 0, relativeZ < 0.5 ? -1 : 1);
+            if (isWeakPitfall(adjustedZ.clone())) {
+                if (consumer.test(location.clone())) {
+                    return;
+                }
+
+                consumer.test(adjustedZ.clone());
             }
         } else if (roughZMatch) {
             // We're roughly in the middle z wise, check to see if the nearest x block
             // looks weak.
-            if (isWeakPitfall(location.clone().add(relativeX < 0.5 ? -1 : 1, 0, 0))) {
-                consumer.test(location.clone());
+            Location adjustedX = location.clone().add(relativeX < 0.5 ? -1 : 1, 0, 0);
+            if (isWeakPitfall(adjustedX.clone())) {
+                if (consumer.test(location.clone())) {
+                    return;
+                }
+
+                consumer.test(adjustedX.clone());
             }
         } else {
             // We're in between 4 blocks, check the remaining blocks
-            if (isWeakPitfall(location.clone().add(relativeX < 0.5 ? -1 : 1, 0, 0)) &&
-                isWeakPitfall(location.clone().add(0, 0, relativeZ < 0.5 ? -1 : 1)) &&
-                isWeakPitfall(location.clone().add(relativeX < 0.5 ? -1 : 1, 0, relativeZ < 0.5 ? -1 : 1))) {
-                consumer.test(location.clone());
+            int xAdjustment = relativeX < 0.5 ? -1 : 1;
+            int zAdjustment = relativeZ < 0.5 ? -1 : 1;
+
+            Location adjustedX = location.clone().add(xAdjustment, 0, 0);
+            Location adjustedZ = location.clone().add(0, 0, zAdjustment);
+            Location adjustedXZ = location.clone().add(xAdjustment, 0, zAdjustment);
+
+            if (isWeakPitfall(adjustedX.clone()) &&
+                isWeakPitfall(adjustedZ.clone()) &&
+                isWeakPitfall(adjustedXZ.clone())) {
+                if (consumer.test(location.clone())) {
+                    return;
+                }
+
+                if (consumer.test(adjustedX.clone())) {
+                    return;
+                }
+
+                if (consumer.test(adjustedZ.clone())) {
+                    return;
+                }
+
+                consumer.test(adjustedXZ.clone());
             }
         }
     }
