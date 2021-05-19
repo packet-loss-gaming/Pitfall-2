@@ -25,17 +25,13 @@ import gg.packetloss.Pitfall.PitfallWorker;
 import gg.packetloss.Pitfall.Point;
 import gg.packetloss.Pitfall.bukkit.event.PitfallBlockChangeEvent;
 import gg.packetloss.Pitfall.bukkit.event.PitfallTriggerEvent;
-import org.apache.commons.lang.CharUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
@@ -63,13 +59,17 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
         records.clear();
     }
 
-    private boolean checkFromPosition(Location location) {
+    private boolean checkFromPosition(Location location, boolean includeAir) {
         location = location.clone();
         final Block h = location.add(0, -1, 0).getBlock();
         final Block b = location.add(0, -1, 0).getBlock();
 
         Material hMat = h.getType();
         Material bMat = b.getType();
+
+        if (includeAir && bMat.isAir() && hMat.isAir()) {
+            return true;
+        }
 
         return targetBlock.equals(bMat) && !checkBlackList(hMat);
     }
@@ -106,37 +106,52 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
         return location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4);
     }
 
-    private boolean testIfLoaded(Location location, Predicate<Location> consumer) {
+    private boolean isApproximately(double value, double target) {
+        return target - 0.2 < value && value < target + 0.2;
+    }
+
+    private boolean isWeakPitfall(Location location) {
         if (!isChunkLoaded(location)) {
             return false;
         }
 
-        return consumer.test(location.clone());
+        return checkFromPosition(location, true);
     }
 
     private void getCheckLocations(Entity entity, Predicate<Location> consumer) {
         Location location = entity.getLocation();
-        if (testIfLoaded(location.clone(), consumer)) {
+
+        double relativeX = Math.abs(location.getX() - location.getBlockX());
+        double relativeZ = Math.abs(location.getZ() - location.getBlockZ());
+
+        boolean roughXMatch = isApproximately(relativeX, .5);
+        boolean roughZMatch = isApproximately(relativeZ, .5);
+
+        boolean isCurrentAWeakPitfall = isWeakPitfall(location.clone());
+        if (!isCurrentAWeakPitfall) {
             return;
         }
 
-        if (!eagerMode || entity.getType() != EntityType.PLAYER) {
-            return;
-        }
-
-        // If eager mode is enabled, check blocks that the player may be standing on
-        for (double xMod : new double[] { 0, .4, -.4 }) {
-            for (double zMod : new double[] { 0, .4, -.4 }) {
-                Location testLoc = location.clone().add(xMod, 0, zMod);
-
-                // Skip already tested locations
-                if (testLoc.getBlockX() == location.getBlockX() && testLoc.getBlockZ() == location.getBlockZ()) {
-                    continue;
-                }
-
-                if (testIfLoaded(testLoc, consumer)) {
-                    return;
-                }
+        if (roughXMatch && roughZMatch) {
+            consumer.test(location.clone());
+        } else if (roughXMatch) {
+            // We're roughly in the middle x wise, check to see if the nearest z block
+            // looks weak.
+            if (isWeakPitfall(location.clone().add(0, 0, relativeZ < 0.5 ? -1 : 1))) {
+                consumer.test(location.clone());
+            }
+        } else if (roughZMatch) {
+            // We're roughly in the middle z wise, check to see if the nearest x block
+            // looks weak.
+            if (isWeakPitfall(location.clone().add(relativeX < 0.5 ? -1 : 1, 0, 0))) {
+                consumer.test(location.clone());
+            }
+        } else {
+            // We're in between 4 blocks, check the remaining blocks
+            if (isWeakPitfall(location.clone().add(relativeX < 0.5 ? -1 : 1, 0, 0)) &&
+                isWeakPitfall(location.clone().add(0, 0, relativeZ < 0.5 ? -1 : 1)) &&
+                isWeakPitfall(location.clone().add(relativeX < 0.5 ? -1 : 1, 0, relativeZ < 0.5 ? -1 : 1))) {
+                consumer.test(location.clone());
             }
         }
     }
@@ -171,7 +186,7 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
                 }
 
                 getCheckLocations(entity, (testLoc) -> {
-                    if (checkFromPosition(testLoc)) {
+                    if (checkFromPosition(testLoc, false)) {
                         activateAtBlock(entity, testLoc);
                         return true;
                     }

@@ -51,7 +51,6 @@ public class YAMLConfiguration extends LocalConfiguration {
         checkFrequency = config.getInt("check-frequency", 5);
         trapDelay = config.getInt("trap-delay", 2);
         returnDelay = config.getInt("return-delay", 60);
-        eagerMode = config.getBoolean("eager-mode", true);
         enableItemTrap = config.getBoolean("enable-item-detection", true);
         enableMonsterTrap = config.getBoolean("enable-monster-detection", true);
         ignoreSpectators = config.getBoolean("ignore-spectators", true);

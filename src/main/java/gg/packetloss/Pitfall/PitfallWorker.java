@@ -32,7 +32,6 @@ public abstract class PitfallWorker<World, Type> implements Runnable {
     protected Set<Type> blackListedBlocks = new HashSet<Type>();
     protected boolean ignoreSpectators = true;
     protected boolean checkPermissions = false;
-    protected boolean eagerMode = false;
 
     public abstract void revertAll();
 
@@ -62,10 +61,6 @@ public abstract class PitfallWorker<World, Type> implements Runnable {
     }
     public void setCheckPermissions(boolean checkPermissions) {
         this.checkPermissions = checkPermissions;
-    }
-
-    public void setEagerMode(boolean eagerMode) {
-        this.eagerMode = eagerMode;
     }
 
     public int trigger(PitfallEditor<World, Type> editor, Point origin) {
