@@ -31,23 +31,24 @@ repositories {
 }
 
 dependencies {
-    compileOnly group: 'com.destroystokyo.paper', name: 'paper-api', version: '1.16.1-R0.1-SNAPSHOT'
+    compileOnly group: 'io.papermc.paper', name: 'paper-api', version: '1.18.1-R0.1-SNAPSHOT'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 group = 'gg.packetloss'
 version = '2.2-SNAPSHOT'
 
 processResources {
+    duplicatesStrategy DuplicatesStrategy.INCLUDE
+
     from (sourceSets.main.resources.srcDirs) {
         expand 'projectVersion': project.version
         include 'plugin.yml'
-    }
-
-    from (sourceSets.main.resources.srcDirs) {
-        exclude 'plugin.yml'
     }
 }
 
