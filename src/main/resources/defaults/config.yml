@@ -7,7 +7,6 @@ ignore:
     - TRAPPED_CHEST
     - SHULKER_BOX
   ignore-non-solid-tops: true
-  ignore-if-no-destination: true
 limits:
   max-radius: 5
   destructive-height: 1
@@ -15,7 +14,7 @@ check-frequency: 5
 trap-delay: 2
 return-delay: 60
 check-pitfall-permission: false
-eager-mode: true
 enable-item-detection: true
 enable-monster-detection: true
 ignore-spectators: true
+ignore-if-no-destination: true

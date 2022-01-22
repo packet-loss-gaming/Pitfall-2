@@ -44,8 +44,10 @@ public class YAMLConfiguration extends LocalConfiguration {
         // Ignorelist
         useIgnoreList = config.getBoolean("ignore.enable", true);
         ignorePassable = config.getBoolean("ignore.ignore-non-solid-tops", true);
-        ignoreIfNoDestination = config.getBoolean("ignore.ignore-if-no-destination", true);
-        ignoreSpectators = config.getBoolean("ignore.ignore-spectators", true);
+
+        // Non-top block related ignores
+        ignoreIfNoDestination = config.getBoolean("ignore-if-no-destination", true);
+        ignoreSpectators = config.getBoolean("ignore-spectators", true);
 
         // Trap Settings
         maxRadius = config.getInt("limits.max-radius", 5);
