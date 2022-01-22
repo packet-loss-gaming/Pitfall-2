@@ -29,7 +29,8 @@ public abstract class PitfallWorker<World, Type> implements Runnable {
     protected int maxRadius = 3;
     protected int destructiveHeight = 1;
     protected Type targetBlock;
-    protected Set<Type> blackListedBlocks = new HashSet<Type>();
+    protected Set<Type> ignoredBlocks = new HashSet<Type>();
+    protected boolean checkForDestination = true;
     protected boolean ignoreSpectators = true;
     protected boolean checkPermissions = false;
 
@@ -50,12 +51,25 @@ public abstract class PitfallWorker<World, Type> implements Runnable {
         this.targetBlock = targetedBlock;
     }
 
-    public abstract boolean checkBlackList(Type type);
+    public abstract boolean checkIfBlockIsIgnored(Type type);
 
-    public Set<Type> getBlackList() {
-        return blackListedBlocks;
+    public abstract boolean isImpassible(World world, Point point);
+
+    public boolean checkForMissingDestination(World world, Point pt) {
+        if (checkForDestination) {
+            return isImpassible(world, pt.withY(pt.getY() - 1)) ||
+                   isImpassible(world, pt.withY(pt.getY() - 2));
+        }
+        return false;
     }
 
+    public Set<Type> getBlockIgnorelist() {
+        return ignoredBlocks;
+    }
+
+    public void setCheckForDestination(boolean checkForDestination) {
+        this.checkForDestination = checkForDestination;
+    }
     public void setIgnoreSpectators(boolean ignoreSpectators) {
         this.ignoreSpectators = ignoreSpectators;
     }
@@ -90,7 +104,12 @@ public abstract class PitfallWorker<World, Type> implements Runnable {
 
             if (targetBlock.equals(editor.getAt(pt))) {
                 Type above = editor.getAt(pt.withY(pt.getY() + 1));
-                if (checkBlackList(above)) continue;
+                if (checkIfBlockIsIgnored(above)) {
+                    continue;
+                }
+                if (checkForMissingDestination(editor.getWorld(), pt)) {
+                    continue;
+                }
                 affected += triggerVert(editor, pt);
             } else {
                 continue;
@@ -122,7 +141,7 @@ public abstract class PitfallWorker<World, Type> implements Runnable {
             }
 
             Type above = editor.getAt(pt);
-            if (!checkBlackList(above) || cy == originY) {
+            if (!checkIfBlockIsIgnored(above) || cy == originY) {
                 PitfallBlockChange<Type> event = callEvent(editor.getWorld(), pt);
                 if (event.isAllowed()) {
                     editor.edit(event.getTargetPoint(), event.getNewType());

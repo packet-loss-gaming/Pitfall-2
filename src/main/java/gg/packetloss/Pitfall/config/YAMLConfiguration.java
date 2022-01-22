@@ -41,9 +41,11 @@ public class YAMLConfiguration extends LocalConfiguration {
     @Override
     public void load() {
 
-        // Black List
-        useBlackList = config.getBoolean("blacklist.enable", true);
-        ignorePassable = config.getBoolean("blacklist.ignore-passible", true);
+        // Ignorelist
+        useIgnoreList = config.getBoolean("ignore.enable", true);
+        ignorePassable = config.getBoolean("ignore.ignore-non-solid-tops", true);
+        ignoreIfNoDestination = config.getBoolean("ignore.ignore-if-no-destination", true);
+        ignoreSpectators = config.getBoolean("ignore.ignore-spectators", true);
 
         // Trap Settings
         maxRadius = config.getInt("limits.max-radius", 5);
@@ -53,7 +55,6 @@ public class YAMLConfiguration extends LocalConfiguration {
         returnDelay = config.getInt("return-delay", 60);
         enableItemTrap = config.getBoolean("enable-item-detection", true);
         enableMonsterTrap = config.getBoolean("enable-monster-detection", true);
-        ignoreSpectators = config.getBoolean("ignore-spectators", true);
 
         // Permission related setting
         checkPitfallPermission = config.getBoolean("check-pitfall-permission", false);

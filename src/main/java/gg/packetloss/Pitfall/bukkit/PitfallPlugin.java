@@ -69,17 +69,18 @@ public class PitfallPlugin extends JavaPlugin {
         pitfallBukkitWorker.setMaxRadius(config.maxRadius);
         pitfallBukkitWorker.setDestructiveHeight(config.destrutiveHeight);
         pitfallBukkitWorker.setTargetBlock(config.targetType);
+        pitfallBukkitWorker.setCheckForDestination(config.ignoreIfNoDestination);
         pitfallBukkitWorker.setIgnoreSpectators(config.ignoreSpectators);
         pitfallBukkitWorker.setCheckPermissions(config.checkPitfallPermission);
 
-        // Blacklist setup
-        if (config.useBlackList) {
-            Set<Material> blackList = pitfallBukkitWorker.getBlackList();
-            blackList.addAll(config.blackListedBlocks);
+        // Ignorelist setup
+        if (config.useIgnoreList) {
+            Set<Material> blockIgnorelist = pitfallBukkitWorker.getBlockIgnorelist();
+            blockIgnorelist.addAll(config.ignoredBlocks);
 
             if (config.ignorePassable) {
                 for (Material material : Material.values()) {
-                    if (material.isBlock() && !material.isSolid()) blackList.add(material);
+                    if (material.isBlock() && !material.isSolid()) blockIgnorelist.add(material);
                 }
             }
         }

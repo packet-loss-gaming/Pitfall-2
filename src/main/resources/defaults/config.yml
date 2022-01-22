@@ -1,12 +1,13 @@
 target-block:
   name: CLAY
-blacklist:
-  blacklisted-blocks:
+ignore:
+  enable: true
+  blocks:
     - CHEST
     - TRAPPED_CHEST
     - SHULKER_BOX
-  enable: true
-  ignore-passible: true
+  ignore-non-solid-tops: true
+  ignore-if-no-destination: true
 limits:
   max-radius: 5
   destructive-height: 1

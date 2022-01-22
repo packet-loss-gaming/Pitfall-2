@@ -41,7 +41,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
     public Material targetType;
 
     // Black List
-    public List<Material> blackListedBlocks;
+    public List<Material> ignoredBlocks;
 
     @Override
     public void load() {
@@ -55,10 +55,10 @@ public class BukkitConfiguration extends YAMLConfiguration {
         String targetTypeIds = config.getString("target-block.name", Material.CLAY.toString());
         targetType = Material.getMaterial(targetTypeIds);
 
-        List<String> blackListedBlockIds = config.getStringList("blacklist.blacklisted-blocks", Arrays.asList(
+        List<String> ignoredBlockNames = config.getStringList("ignore.blocks", Arrays.asList(
                 Material.CHEST.toString(), Material.TRAPPED_CHEST.toString(), Material.SHULKER_BOX.toString()
         ));
-        blackListedBlocks = blackListedBlockIds.stream().map(Material::getMaterial).collect(Collectors.toList());
+        this.ignoredBlocks = ignoredBlockNames.stream().map(Material::getMaterial).collect(Collectors.toList());
 
         super.load();
     }

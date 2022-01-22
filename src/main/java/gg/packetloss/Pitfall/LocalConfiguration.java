@@ -25,8 +25,9 @@ import java.io.File;
 public abstract class LocalConfiguration {
 
     // Black List
-    public boolean useBlackList;
+    public boolean useIgnoreList;
     public boolean ignorePassable;
+    public boolean ignoreIfNoDestination;
 
     // Trap Settings
     public int maxRadius;

@@ -48,7 +48,7 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
 
     public PitfallBukkitWorker() {
         targeted.add(Player.class);
-        blackListedBlocks.add(Material.AIR);
+        ignoredBlocks.add(Material.AIR);
     }
 
     @Override
@@ -67,11 +67,21 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
         Material hMat = h.getType();
         Material bMat = b.getType();
 
+        // Allow edges to count for some checks.
         if (includeAir && bMat.isAir() && hMat.isAir()) {
             return true;
         }
 
-        return targetBlock.equals(bMat) && !checkBlackList(hMat);
+        if (!targetBlock.equals(bMat)) {
+            return false;
+        }
+        if (checkIfBlockIsIgnored(hMat)) {
+            return false;
+        }
+        if (checkForMissingDestination(location.getWorld(), new Point(b.getX(), b.getY(), b.getZ()))) {
+            return false;
+        }
+        return true;
     }
 
     private void activateAtBlock(Entity entity, Location location) {
@@ -245,8 +255,13 @@ public class PitfallBukkitWorker extends PitfallWorker<World, Material> {
     }
 
     @Override
-    public boolean checkBlackList(Material type) {
-        return blackListedBlocks.contains(type);
+    public boolean checkIfBlockIsIgnored(Material type) {
+        return ignoredBlocks.contains(type);
+    }
+
+    @Override
+    public boolean isImpassible(World world, Point pt) {
+        return world.getBlockAt(pt.getX(), pt.getY(), pt.getZ()).isSolid();
     }
 
     @Override
